@@ -1,0 +1,105 @@
+---
+/*
+ * ProjectCard — card de projeto da Home.
+ * Imagem (proporção 590:443) + título, descrição (máx. 2 linhas, cortada) e metadados.
+ * Hover: a imagem cresce 5% dentro do card e o título vai para a cor de destaque.
+ *
+ * Spec: DESIGN-SYSTEM.md → Componentes → ProjectCard
+ */
+import Placeholder from "./Placeholder.astro";
+
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  category: string;
+  year: string;
+}
+
+const { href, title, description, category, year } = Astro.props;
+---
+
+<a class="project-card" href={href}>
+  <div class="media">
+    <!-- Placeholder até a capa entrar. URLs originais em src/data/home.ts -->
+    <Placeholder width={590} height={443} class="media-inner" />
+  </div>
+
+  <div class="details">
+    <div class="text">
+      <h3 class="title text-heading-card">{title}</h3>
+      <p class="description text-body">{description}</p>
+    </div>
+    <div class="meta text-small">
+      <span>{category}</span>
+      <span class="dot" aria-hidden="true"></span>
+      <span>{year}</span>
+    </div>
+  </div>
+</a>
+
+<style>
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+
+  .media {
+    overflow: hidden;
+  }
+
+  .media :global(.media-inner) {
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+
+  .project-card:hover .media :global(.media-inner) {
+    transform: scale(1.05);
+  }
+
+  .details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    padding: var(--space-20);
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .title {
+    color: var(--color-text);
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
+
+  .project-card:hover .title {
+    color: var(--color-accent);
+  }
+
+  /* Igual ao Framer: a descrição mostra no máximo 2 linhas e o resto é cortado (sem reticências) */
+  .description {
+    /* 44px = altura fixa medida no Framer (≈ 2 linhas de 22,4px) */
+    max-height: 44px;
+    overflow: hidden;
+    color: var(--color-text-80);
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    color: var(--color-text-60);
+  }
+
+  .dot {
+    width: 4px;
+    height: 4px;
+    border-radius: var(--radius-pill);
+    background: var(--color-text-60);
+  }
+</style>

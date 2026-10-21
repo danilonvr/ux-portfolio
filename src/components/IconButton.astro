@@ -1,0 +1,43 @@
+---
+/*
+ * IconButton — link redondo só com ícone (redes sociais).
+ * 40×40px, fundo --color-surface, ícone de 24px.
+ * Hover: nenhum (igual ao Framer).
+ *
+ * Spec: DESIGN-SYSTEM.md → Componentes → IconButton
+ */
+import Icon from "./Icon.astro";
+
+interface Props {
+  href: string;
+  icon: "linkedin" | "x";
+  label: string; // obrigatório: é o único texto do link para leitores de tela
+  external?: boolean;
+}
+
+const { href, icon, label, external = true } = Astro.props;
+---
+
+<a
+  class="icon-button"
+  href={href}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
+  aria-label={label}
+>
+  <Icon name={icon} size={24} />
+</a>
+
+<style>
+  .icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: var(--space-8);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+</style>

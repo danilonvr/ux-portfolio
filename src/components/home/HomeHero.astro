@@ -1,0 +1,128 @@
+---
+/*
+ * HomeHero — topo da Home: título animado, perfil (nome, cargos, descrição) e contato.
+ *
+ * Layout (igual ao Framer):
+ *   desktop/tablet: perfil (400px) à esquerda e contato (250px) à direita, alinhados pela base
+ *   phone: perfil em cima e contato embaixo, com 50px entre eles
+ */
+import RevealTitle from "../RevealTitle.astro";
+import RoleSlideshow from "../RoleSlideshow.astro";
+import ArrowLink from "../ArrowLink.astro";
+import EmailRoll from "../EmailRoll.astro";
+import IconButton from "../IconButton.astro";
+import { hero } from "../../data/home";
+import { links } from "../../data/site";
+---
+
+<section class="hero">
+  <div class="inner container">
+    <RevealTitle words={hero.title} />
+
+    <div class="content">
+      <div class="profile">
+        <div class="name">
+          <p class="text-heading-sm greeting">{hero.greeting}</p>
+          <RoleSlideshow items={hero.roles} />
+        </div>
+        <p class="text-body description">{hero.description}</p>
+        <ArrowLink href="/about">{hero.moreLabel}</ArrowLink>
+      </div>
+
+      <div class="contact">
+        <div class="contact-group">
+          <p class="text-small label">{hero.emailLabel}</p>
+          <EmailRoll email={hero.email} />
+        </div>
+        <div class="contact-group">
+          <p class="text-small label">{hero.socialLabel}</p>
+          <div class="social">
+            <IconButton href={links.linkedin} icon="linkedin" label="LinkedIn" />
+            <IconButton href={links.x} icon="x" label="X (Twitter)" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: var(--section-pad-y) var(--page-gutter);
+  }
+
+  .inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--hero-gap);
+  }
+
+  .content {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  /* ---------- Perfil ---------- */
+  .profile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-20);
+    width: 400px;
+  }
+
+  .name {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .greeting {
+    color: var(--color-text);
+  }
+
+  .description {
+    color: var(--color-text-80);
+  }
+
+  /* ---------- Contato ---------- */
+  .contact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-20);
+    width: 250px;
+  }
+
+  .contact-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-8);
+  }
+
+  .label {
+    color: var(--color-text-muted);
+  }
+
+  .social {
+    display: flex;
+    align-items: center;
+    gap: var(--space-20);
+  }
+
+  /* ---------- Phone ---------- */
+  @media (max-width: 809.98px) {
+    .content {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-50);
+    }
+
+    .profile {
+      width: 100%;
+    }
+  }
+</style>

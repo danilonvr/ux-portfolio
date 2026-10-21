@@ -1,0 +1,59 @@
+---
+/*
+ * EmailRoll — link de email com efeito de "rolagem" no hover.
+ * Duas cópias do texto empilhadas; no hover (ou foco pelo teclado) a pilha sobe
+ * e revela a cópia na cor de destaque.
+ *
+ * Medido no Framer: deslocamento de ~32px (linha de 22,4px + 10px de gap).
+ * Duração aproximada.
+ *
+ * Spec: DESIGN-SYSTEM.md → Componentes → EmailRoll
+ */
+interface Props {
+  email: string;
+}
+
+const { email } = Astro.props;
+---
+
+<a class="email-roll text-body" href={`mailto:${email}`} target="_blank" rel="noopener noreferrer">
+  <span class="track">
+    <span class="copy">{email}</span>
+    <span class="copy copy--accent" aria-hidden="true">{email}</span>
+  </span>
+</a>
+
+<style>
+  .email-roll {
+    --roll-line: calc(var(--text-body-size) * var(--text-body-line));
+    --roll-gap: var(--space-10);
+
+    display: inline-block;
+    height: var(--roll-line);
+    overflow: hidden;
+    vertical-align: top;
+  }
+
+  .track {
+    display: flex;
+    flex-direction: column;
+    gap: var(--roll-gap);
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .copy {
+    display: block;
+    height: var(--roll-line);
+    color: var(--color-text-80);
+    white-space: nowrap;
+  }
+
+  .copy--accent {
+    color: var(--color-accent);
+  }
+
+  .email-roll:hover .track,
+  .email-roll:focus-visible .track {
+    transform: translateY(calc((var(--roll-line) + var(--roll-gap)) * -1));
+  }
+</style>

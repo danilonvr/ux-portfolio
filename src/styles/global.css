@@ -86,18 +86,36 @@ h1, h2, h3, h4, h5, h6 {
 /* ---------- Estilos de texto ----------
  * Use estas classes em vez de definir fonte/tamanho em cada componente.
  */
+.text-display {
+  font-family: var(--font-serif);
+  font-size: var(--text-display-size);
+  font-weight: var(--weight-regular);
+  line-height: 1.2;
+}
+
 .text-heading-xs,
 .text-heading-sm,
 .text-heading-md,
+.text-heading-card,
+.text-heading-lg,
 .text-heading-cta {
   font-family: var(--font-serif);
   font-weight: var(--weight-medium);
   line-height: 1.2;
 }
-.text-heading-xs  { font-size: var(--text-heading-xs-size); }
-.text-heading-sm  { font-size: var(--text-heading-sm-size); }
-.text-heading-md  { font-size: var(--text-heading-md-size); }
-.text-heading-cta { font-size: var(--text-heading-cta-size); }
+.text-heading-xs   { font-size: var(--text-heading-xs-size); }
+.text-heading-sm   { font-size: var(--text-heading-sm-size); }
+.text-heading-md   { font-size: var(--text-heading-md-size); }
+.text-heading-card { font-size: var(--text-heading-card-size); }
+.text-heading-lg   { font-size: var(--text-heading-lg-size); }
+.text-heading-cta  { font-size: var(--text-heading-cta-size); }
+
+.text-small {
+  font-family: var(--font-sans);
+  font-size: var(--text-small-size);
+  line-height: 1.2;
+  font-weight: var(--weight-regular);
+}
 
 .text-body {
   font-family: var(--font-sans);

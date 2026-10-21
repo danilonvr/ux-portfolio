@@ -1,0 +1,101 @@
+---
+/*
+ * RoleSlideshow — troca de cargos ("Product Designer" → "Lifelong Learner" → …).
+ * A cada 4s o texto sobe para o próximo item, em loop infinito.
+ *
+ * Medido no Framer: um passo a cada 4000ms, deslocamento de 30px (20px de linha + 10px de gap).
+ * A duração da transição (800ms) é aproximada.
+ *
+ * Acessibilidade: o leitor de tela recebe a lista completa uma vez (texto oculto);
+ * a parte animada fica escondida dele. Com movimento reduzido, mostra só o primeiro item.
+ *
+ * Spec: DESIGN-SYSTEM.md → Componentes → RoleSlideshow
+ */
+interface Props {
+  items: string[];
+}
+
+const { items } = Astro.props;
+// Cópia do primeiro item no fim, para o loop voltar ao início sem "pulo" visível
+const track = [...items, items[0]];
+---
+
+<div class="role-slideshow" data-role-slideshow data-count={items.length}>
+  <span class="visually-hidden">{items.join(", ")}</span>
+  <ul class="track" aria-hidden="true">
+    {track.map((item) => (
+      <li class="item text-small">{item}</li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .role-slideshow {
+    --slide-height: 20px;
+    --slide-gap: var(--space-10);
+    --slide-step: calc(var(--slide-height) + var(--slide-gap));
+
+    width: 200px;
+    height: var(--slide-height);
+    overflow: hidden;
+    color: var(--color-text-muted);
+    animation: fade-in 500ms var(--ease-standard) 150ms both;
+  }
+
+  .track {
+    display: flex;
+    flex-direction: column;
+    gap: var(--slide-gap);
+    transform: translateY(calc(var(--index, 0) * var(--slide-step) * -1));
+    transition: transform 800ms var(--ease-out);
+  }
+
+  /* Usado no instante em que o loop volta ao início */
+  .track.no-transition {
+    transition: none;
+  }
+
+  .item {
+    display: flex;
+    align-items: center;
+    height: var(--slide-height);
+    white-space: nowrap;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
+
+<script>
+  const STEP_INTERVAL = 4000;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  document.querySelectorAll<HTMLElement>("[data-role-slideshow]").forEach((root) => {
+    const track = root.querySelector<HTMLElement>(".track");
+    const count = Number(root.dataset.count);
+    if (!track || count < 2) return;
+
+    let index = 0;
+
+    const setIndex = (value: number) => {
+      index = value;
+      track.style.setProperty("--index", String(value));
+    };
+
+    // Chegou na cópia do primeiro item: volta para o início sem animação
+    track.addEventListener("transitionend", () => {
+      if (index !== count) return;
+      track.classList.add("no-transition");
+      setIndex(0);
+      void track.offsetHeight; // força o navegador a aplicar antes de religar a transição
+      track.classList.remove("no-transition");
+    });
+
+    setInterval(() => {
+      if (reduceMotion.matches || document.hidden) return;
+      setIndex(index + 1);
+    }, STEP_INTERVAL);
+  });
+</script>

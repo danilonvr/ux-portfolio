@@ -1,0 +1,21 @@
+---
+/*
+ * Divider — linha horizontal de 1px entre seções, alinhada ao container.
+ * 10px de respiro em cima e embaixo.
+ */
+---
+
+<div class="divider" role="presentation">
+  <div class="container"><div class="line"></div></div>
+</div>
+
+<style>
+  .divider {
+    padding: var(--space-10) var(--page-gutter);
+  }
+
+  .line {
+    height: 1px;
+    background: var(--color-border);
+  }
+</style>

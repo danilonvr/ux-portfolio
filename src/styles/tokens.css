@@ -24,6 +24,7 @@
   --color-accent: #00ae9d;                /* hover de links */
   --color-border: rgb(5 5 5 / 0.1);       /* linhas divisórias */
   --color-glass: rgb(255 255 255 / 0.5);  /* pílulas translúcidas (nav, logo) */
+  --color-surface: rgb(5 5 5 / 0.03);     /* fundo de cards e botões de ícone */
 
   /* ---------- Tipografia: famílias ---------- */
   --font-serif: "Poltawski Nowy", "Poltawski Nowy Placeholder", serif;
@@ -33,15 +34,19 @@
   /* ---------- Tipografia: estilos (valores do desktop) ----------
    * Nome = papel do texto, não o tamanho. Line-height de todos os serifados = 1.2.
    */
+  --text-display-size: 64px;       /* título do hero (peso regular) */
   --text-heading-xs-size: 14px;    /* nome no logo */
-  --text-heading-sm-size: 18px;    /* rótulos serifados: "Lets talk?", "Index", "Brazil" */
+  --text-heading-sm-size: 18px;    /* rótulos serifados: "Lets talk?", "Index", "Hi, I'm Danilo!" */
   --text-heading-md-size: 22px;    /* links do footer */
+  --text-heading-card-size: 24px;  /* título do card de projeto */
+  --text-heading-lg-size: 26px;    /* título de seção ("Projects") */
   --text-heading-cta-size: 28px;   /* frase de CTA do footer */
 
   --text-body-size: 16px;          /* corpo de texto */
   --text-body-line: 1.4;
   --text-nav-size: 13px;           /* itens da nav */
   --text-nav-tracking: 0.03em;     /* = 0.39px em 13px */
+  --text-small-size: 14px;         /* rótulos e metadados em Inter ("Let's talk", "2025") */
   --text-label-size: 12px;         /* botões e rótulos em caixa alta */
   --text-label-line: 1.1;
   --text-caption-size: 12px;       /* metadados pequenos */
@@ -77,6 +82,8 @@
   --footer-offset: var(--space-100);     /* espaço acima do footer */
   --footer-pad-top: var(--space-100);
   --footer-gap: var(--space-100);
+  --section-pad-y: var(--space-50);      /* padding vertical das seções de conteúdo */
+  --hero-gap: var(--space-100);          /* entre o título do hero e o bloco de perfil */
 
   /* ---------- Raio ---------- */
   --radius-pill: 50px;     /* botões e itens de nav */
@@ -90,7 +97,9 @@
    */
   --duration-fast: 200ms;
   --duration-base: 300ms;
+  --duration-slow: 600ms;
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* ---------- Ícones ---------- */
   --icon-sm: 12px;
@@ -102,9 +111,14 @@
 /* ---------- Tablet: 810px – 1199px ---------- */
 @media (max-width: 1199.98px) {
   :root {
+    --text-display-size: 52px;
     --text-heading-sm-size: 17px;
     --text-heading-md-size: 21px;
+    --text-heading-card-size: 22px;
+    --text-heading-lg-size: 24px;
     --text-heading-cta-size: 26px;
+
+    --hero-gap: var(--space-80);
 
     --page-gutter: var(--space-30);
     --header-pad-y: var(--space-20);
@@ -118,9 +132,15 @@
 /* ---------- Phone: até 809px ---------- */
 @media (max-width: 809.98px) {
   :root {
+    --text-display-size: 38px;
     --text-heading-sm-size: 16px;
     --text-heading-md-size: 20px;
+    --text-heading-card-size: 20px;
+    --text-heading-lg-size: 22px;
     --text-heading-cta-size: 24px;
+
+    --section-pad-y: var(--space-40);
+    --hero-gap: var(--space-60);
 
     --page-gutter: var(--space-20);
     --header-pad-y: var(--space-20);

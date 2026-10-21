@@ -1,8 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PageStub from "../components/PageStub.astro";
+import HomeHero from "../components/home/HomeHero.astro";
+import Divider from "../components/Divider.astro";
+import ProjectsSection from "../components/home/ProjectsSection.astro";
 ---
 
 <BaseLayout>
-  <PageStub name="Home" />
+  <HomeHero />
+  <Divider />
+  <ProjectsSection />
 </BaseLayout>

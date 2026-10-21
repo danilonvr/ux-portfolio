@@ -45,6 +45,7 @@ O CSS é escrito **desktop primeiro**: o valor padrão é o do desktop e as medi
 | `--color-accent`     | `#00AE9D`                 | Estado de hover de links                    |
 | `--color-border`     | `#050505` a 10%           | Linhas divisórias; placeholders de mídia    |
 | `--color-glass`      | `#FFFFFF` a 50%           | Pílulas translúcidas (nav, logo no desktop) |
+| `--color-surface`    | `#050505` a 3%            | Fundo de cards e botões de ícone            |
 
 **Contraste (a revisar na fase de evolução):** `--color-text-muted` sobre `--color-bg` fica abaixo de 4.5:1 (WCAG AA para texto pequeno). Está igual ao Framer de propósito.
 
@@ -62,19 +63,21 @@ O CSS é escrito **desktop primeiro**: o valor padrão é o do desktop e as medi
 
 **Estilos de texto** (classes em `global.css`):
 
-| Classe              | Família | Peso | Desktop | Tablet | Phone | Line-height | Extra                  |
-|---------------------|---------|------|---------|--------|-------|-------------|------------------------|
-| `.text-heading-xs`  | serif   | 500  | 14      | 14     | 14    | 1.2         |                        |
-| `.text-heading-sm`  | serif   | 500  | 18      | 17     | 16    | 1.2         |                        |
-| `.text-heading-md`  | serif   | 500  | 22      | 21     | 20    | 1.2         |                        |
-| `.text-heading-cta` | serif   | 500  | 28      | 26     | 24    | 1.2         |                        |
-| `.text-body`        | sans    | 400  | 16      | 16     | 16    | 1.4         |                        |
-| `.text-nav`         | sans    | 500  | 13      | 13     | 13    | 1.2         | tracking 0.03em        |
-| `.text-label`       | sans    | 500  | 12      | 12     | 12    | 1.1         | caixa alta             |
-| `.text-caption`     | sans    | 400  | 12      | 12     | 12    | 1.2         |                        |
-| (relógio)           | Manrope | 500  | 18      | 18     | 18    | 1.2         | não muda por breakpoint|
-
-**A mapear na Home e no About** (vistos na inspeção, ainda sem token): título do hero (64px no desktop), título de seção "Projects" (26px), título do card de projeto (24px), cargos do ticker (Inter 14px).
+| Classe               | Família | Peso | Desktop | Tablet | Phone | Line-height | Uso / extra                         |
+|----------------------|---------|------|---------|--------|-------|-------------|-------------------------------------|
+| `.text-display`      | serif   | 400  | 64      | 52     | 38    | 1.2         | Título do hero                      |
+| `.text-heading-cta`  | serif   | 500  | 28      | 26     | 24    | 1.2         | Frase de CTA do footer              |
+| `.text-heading-lg`   | serif   | 500  | 26      | 24     | 22    | 1.2         | Título de seção ("Projects")        |
+| `.text-heading-card` | serif   | 500  | 24      | 22     | 20    | 1.2         | Título do card de projeto           |
+| `.text-heading-md`   | serif   | 500  | 22      | 21     | 20    | 1.2         | Links do footer                     |
+| `.text-heading-sm`   | serif   | 500  | 18      | 17     | 16    | 1.2         | Rótulos serifados, "Hi, I'm Danilo!"|
+| `.text-heading-xs`   | serif   | 500  | 14      | 14     | 14    | 1.2         | Nome no logo                        |
+| `.text-body`         | sans    | 400  | 16      | 16     | 16    | 1.4         | Corpo de texto                      |
+| `.text-small`        | sans    | 400  | 14      | 14     | 14    | 1.2         | Rótulos, cargos, metadados do card  |
+| `.text-nav`          | sans    | 500  | 13      | 13     | 13    | 1.2         | Itens da nav · tracking 0.03em      |
+| `.text-label`        | sans    | 500  | 12      | 12     | 12    | 1.1         | Botões e links em caixa alta        |
+| `.text-caption`      | sans    | 400  | 12      | 12     | 12    | 1.2         | "Brasília, Brazil"                  |
+| (relógio)            | Manrope | 500  | 18      | 18     | 18    | 1.2         | Não muda por breakpoint             |
 
 ---
 
@@ -93,6 +96,8 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 | `--footer-offset`  | 100px   | 80px   | 60px  | Espaço acima do footer               |
 | `--footer-pad-top` | 100px   | 80px   | 60px  | Padding interno do topo do footer    |
 | `--footer-gap`     | 100px   | 80px   | 60px  | Distância entre conteúdo e linha final |
+| `--section-pad-y`  | 50px    | 50px   | 40px  | Padding vertical das seções de conteúdo |
+| `--hero-gap`       | 100px   | 80px   | 60px  | Entre o título do hero e o perfil    |
 
 ---
 
@@ -114,8 +119,10 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 | Token             | Valor                          | Uso                            |
 |-------------------|--------------------------------|--------------------------------|
 | `--duration-fast` | 200ms                          | Hover de cor                   |
-| `--duration-base` | 300ms                          | Abertura do menu, ícone do menu|
-| `--ease-standard` | `cubic-bezier(0.4, 0, 0.2, 1)` | Padrão                         |
+| `--duration-base` | 300ms                          | Abertura do menu, rolagem do email |
+| `--duration-slow` | 600ms                          | Entrada de palavras, zoom do card  |
+| `--ease-standard` | `cubic-bezier(0.4, 0, 0.2, 1)` | Padrão (mudanças de cor)           |
+| `--ease-out`      | `cubic-bezier(0.22, 1, 0.36, 1)` | Movimentos de entrada e deslocamento |
 
 > **Aproximação.** O Framer não expõe as curvas usadas. Estes valores foram escolhidos por equivalência visual e serão calibrados lado a lado.
 
@@ -139,7 +146,7 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 
 - `.text-label` em `--color-text`, gap 5px, 2px de respiro embaixo.
 - **Hover:** só a seta vai para `--color-accent`; o texto não muda.
-- Usado em: "Contact Me" (footer). Será usado em "More About me" (Home).
+- Usado em: "Contact Me" (footer), "More About me" (Home).
 
 ### Header
 `src/components/Header.astro` — fixo no topo, com espaçador da mesma altura.
@@ -170,6 +177,51 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
   - phone: CTA em cima, colunas em grade de 2.
 - Linha final 1px `--color-border`.
 
+### RevealTitle
+`src/components/RevealTitle.astro` — título que aparece palavra por palavra ao carregar.
+
+- `.text-display`, largura máxima 90% do container (igual ao Framer).
+- Cada palavra vai de opacidade 0 e 10px abaixo para opacidade 1 na posição final.
+- Timing: atraso inicial 150ms, 600ms por palavra (`--duration-slow`, `--ease-out`), 80ms entre palavras. **Aproximado** — no Framer a sequência leva ~1,1s.
+- Só CSS (funciona sem JavaScript). Com movimento reduzido, o título aparece pronto.
+
+### RoleSlideshow
+`src/components/RoleSlideshow.astro` — cargos que trocam em loop abaixo de "Hi, I'm Danilo!".
+
+- Janela de 200×20px; `.text-small` em `--color-text-muted`.
+- A cada **4s** (medido) a lista sobe 30px (20px de linha + 10px de gap). Transição de 800ms (aproximada).
+- Loop sem pulo: o primeiro item é repetido no fim e o componente volta ao início sem animação.
+- Entra com fade de 500ms ao carregar.
+- Leitores de tela recebem a lista completa uma vez; a parte animada é escondida deles. Com movimento reduzido, fica parado no primeiro item. Pausa quando a aba está em segundo plano.
+
+### EmailRoll
+`src/components/EmailRoll.astro` — link de email com efeito de rolagem.
+
+- Duas cópias empilhadas (gap 10px) numa janela da altura de uma linha.
+- **Hover e foco pelo teclado:** a pilha sobe ~32px e mostra a cópia em `--color-accent` (`--duration-base`, `--ease-out`).
+- A cópia de destaque é escondida de leitores de tela, para o email não ser lido duas vezes.
+
+### IconButton
+`src/components/IconButton.astro` — link redondo só com ícone.
+
+- 40×40px, padding 8px, raio total, fundo `--color-surface`, ícone 24px em `--color-text`.
+- **Hover:** nenhum (igual ao Framer).
+- `label` é obrigatório (é o texto que o leitor de tela anuncia).
+
+### ProjectCard
+`src/components/ProjectCard.astro` — card da grade de projetos.
+
+- Fundo `--color-surface`, sem raio.
+- Imagem na proporção 590:443; depois, bloco com padding 20px e gap 10px.
+  - Título: `.text-heading-card`.
+  - Descrição: `.text-body` em `--color-text-80`. Mostra no máximo 44px (≈2 linhas) e o resto é **cortado sem reticências**, igual ao Framer.
+  - Metadados: categoria, ponto de 4px e ano (`.text-small` em `--color-text-60`).
+- **Hover:** imagem cresce para 105% dentro do card (`--duration-slow`) e título vai para `--color-accent`.
+- Grade: 2 colunas no desktop/tablet, 1 no phone, gap 20px. Cards não esticam para igualar alturas.
+
+### Divider
+`src/components/Divider.astro` — linha de 1px `--color-border` alinhada ao container, com 10px de respiro em cima e embaixo.
+
 ### Placeholder
 `src/components/Placeholder.astro` — ocupa o lugar de imagens e vídeos, mantendo a proporção. Fundo `--color-border`. Opção `round` para o avatar.
 
@@ -184,6 +236,8 @@ Registro do que foi decidido e por quê. Mais recente em cima.
 
 | Data       | Decisão | Motivo |
 |------------|---------|--------|
+| 2026-10-21 | O que no Framer parecia um "ticker" é um slideshow: troca de item a cada 4s, não rolagem contínua. Recriado como RoleSlideshow. | Comportamento medido no site. |
+| 2026-10-21 | "Hi, I'm Danilo!" usa `<p>` (no Framer era `<h6>`). | Não é título de seção; sem efeito visual. |
 | 2026-10-21 | Copy copiada exatamente do Framer, inclusive contradições ("two years" × "three years", empregador antigo). | Revisão de copy será feita depois, separada da paridade. |
 | 2026-10-21 | Analytics (GA4 + Hotjar) removido, com espaço reservado. | Será configurado depois. |
 | 2026-10-21 | Imagens e vídeos substituídos por placeholders com a proporção original. | Mídia entra aos poucos. URLs originais em `/content-archive`. |
@@ -198,3 +252,5 @@ Registro do que foi decidido e por quê. Mais recente em cima.
 - [ ] Idioma da página declarado como `pt-BR`, mas o conteúdo é em inglês. Afeta leitores de tela e SEO.
 - [ ] "Get in Touch" e "Contact Me" levam ao LinkedIn, não ao email.
 - [ ] Contraste baixo de `--color-text-muted` (ver seção Cor).
+- [ ] Ao clicar em "Work", a página rola até o título "Projects", mas ele fica escondido atrás do header fixo. Correção sugerida: `scroll-margin-top: var(--header-height)` no `#projects`.
+- [ ] A descrição do card é cortada no meio da frase, sem reticências, quando passa de 2 linhas (visível no tablet e no phone).

@@ -37,7 +37,7 @@ content-archive/        ← conteúdo extraído do Framer, guardado para uso fut
 - [x] Tokens e mini DS
 - [x] Header (desktop, tablet, phone + menu mobile)
 - [x] Footer (com relógio ao vivo)
-- [ ] Home
+- [x] Home (capas dos projetos ainda como placeholder)
 - [ ] About
 - [ ] Template de case (será redesenhado)
 

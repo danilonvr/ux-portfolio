@@ -1,0 +1,62 @@
+---
+/*
+ * RevealTitle — título que aparece palavra por palavra ao carregar a página.
+ * Cada palavra sobe 10px e vai de transparente a opaca, em sequência.
+ * Funciona só com CSS (não depende de JavaScript).
+ *
+ * Timing (aproximação do Framer, calibrar lado a lado):
+ *   atraso inicial 150ms · 600ms por palavra · 80ms entre palavras
+ *
+ * Spec: DESIGN-SYSTEM.md → Componentes → RevealTitle
+ */
+interface Props {
+  words: string[];
+  as?: "h1" | "h2";
+}
+
+const { words, as: Tag = "h1" } = Astro.props;
+---
+
+<Tag class="reveal-title text-display">
+  {words.map((word, i) => (
+    <>
+      <span class="word" style={`--i: ${i}`}>{word}</span>{" "}
+    </>
+  ))}
+</Tag>
+
+<style>
+  .reveal-title {
+    /* No Framer o título ocupa 90% da largura do container */
+    max-width: 90%;
+    color: var(--color-text);
+
+    --reveal-delay: 150ms;
+    --reveal-stagger: 80ms;
+  }
+
+  .word {
+    display: inline-block;
+    opacity: 0;
+    animation: word-in var(--duration-slow) var(--ease-out) forwards;
+    animation-delay: calc(var(--reveal-delay) + var(--i) * var(--reveal-stagger));
+  }
+
+  @keyframes word-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .word {
+      animation: none;
+      opacity: 1;
+    }
+  }
+</style>
