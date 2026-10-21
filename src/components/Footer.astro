@@ -1,0 +1,234 @@
+---
+/*
+ * Footer — CTA + 3 colunas de links (Index, Projects, contato com relógio) + linha final.
+ *
+ * Layout por breakpoint (igual ao Framer):
+ *   desktop: CTA (400px) à esquerda e colunas (3 × 213px) à direita, lado a lado
+ *   tablet : CTA em cima; colunas em 3 partes iguais embaixo
+ *   phone  : CTA em cima; colunas em grade de 2
+ *
+ * Spec: DESIGN-SYSTEM.md → Componentes → Footer
+ */
+import Button from "./Button.astro";
+import ArrowLink from "./ArrowLink.astro";
+import { links, footerColumns, footerCta, clock } from "../data/site";
+
+const columns = [footerColumns.index, footerColumns.projects, footerColumns.contact];
+---
+
+<div class="footer-offset">
+  <footer class="site-footer">
+    <div class="inner container">
+      <div class="main">
+        <div class="cta">
+          <div class="cta-title">
+            <p class="text-heading-sm eyebrow">{footerCta.eyebrow}</p>
+            <p class="text-heading-cta">{footerCta.title}</p>
+          </div>
+          <div class="cta-actions">
+            <Button href={links.resume} external>Resume</Button>
+            <ArrowLink href={links.linkedin} external>Contact Me</ArrowLink>
+          </div>
+        </div>
+
+        <div class="columns">
+          {columns.map((column) => (
+            <div class="column">
+              {column === footerColumns.contact ? (
+                <div class="column-title column-title--clock">
+                  <h2 class="text-heading-sm">{column.title}</h2>
+                  <span class="text-heading-sm" aria-hidden="true">-</span>
+                  <time
+                    class="clock"
+                    data-clock
+                    data-timezone={clock.timeZone}
+                    data-locale={clock.locale}
+                  ></time>
+                </div>
+              ) : (
+                <h2 class="text-heading-sm column-title">{column.title}</h2>
+              )}
+              <ul class="column-list">
+                {column.items.map((item) => (
+                  <li>
+                    <a
+                      class="text-heading-md footer-link"
+                      href={item.href}
+                      target={"external" in item && item.external ? "_blank" : undefined}
+                      rel={"external" in item && item.external ? "noopener noreferrer" : undefined}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="line" role="presentation"></div>
+    </div>
+  </footer>
+</div>
+
+<style>
+  /* ---------- Estrutura ---------- */
+  .footer-offset {
+    padding-top: var(--footer-offset);
+  }
+
+  .site-footer {
+    padding: var(--footer-pad-top) var(--page-gutter) var(--space-30);
+    background: var(--color-bg);
+  }
+
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--footer-gap);
+  }
+
+  .main {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-100);
+  }
+
+  /* ---------- CTA ---------- */
+  .cta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-30);
+    width: 400px;
+    max-width: 100%;
+    flex-shrink: 0;
+  }
+
+  .cta-title {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-20);
+  }
+
+  .eyebrow {
+    color: var(--color-text-60);
+  }
+
+  .cta-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-10);
+  }
+
+  /* ---------- Colunas ---------- */
+  .columns {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-30);
+    flex: 1;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-20);
+    width: 213px;
+  }
+
+  .column-title {
+    color: var(--color-text-60);
+  }
+
+  .column-title--clock {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  .clock {
+    font-family: var(--font-clock);
+    font-size: var(--text-clock-size);
+    font-weight: var(--weight-medium);
+    line-height: 1.2;
+    color: var(--color-text-60);
+    /* Reserva espaço para a hora não empurrar o layout ao carregar */
+    min-width: 69px;
+  }
+
+  .column-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .footer-link {
+    color: var(--color-text-80);
+    /* Não quebra linha: no phone "X (Formerly Twitter)" passa da coluna, igual ao Framer */
+    white-space: nowrap;
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
+
+  .footer-link:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+
+  .line {
+    width: 100%;
+    height: 1px;
+    background: var(--color-border);
+  }
+
+  /* ---------- Tablet ---------- */
+  @media (max-width: 1199.98px) {
+    .main {
+      flex-direction: column;
+      gap: var(--space-50);
+    }
+
+    .columns {
+      width: 100%;
+    }
+
+    .column {
+      flex: 1;
+      width: auto;
+    }
+  }
+
+  /* ---------- Phone ---------- */
+  @media (max-width: 809.98px) {
+    .columns {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+      gap: var(--space-30);
+    }
+  }
+</style>
+
+<script>
+  // Relógio ao vivo no fuso de Brasília, formato "7:04 PM".
+  const clocks = document.querySelectorAll<HTMLTimeElement>("[data-clock]");
+
+  function tick() {
+    const now = new Date();
+    clocks.forEach((el) => {
+      const formatter = new Intl.DateTimeFormat(el.dataset.locale, {
+        timeZone: el.dataset.timezone,
+        hour: "numeric",
+        minute: "2-digit",
+      });
+      el.textContent = formatter.format(now);
+      el.dateTime = now.toISOString();
+    });
+  }
+
+  tick();
+  // Atualiza na virada de cada minuto
+  setTimeout(() => {
+    tick();
+    setInterval(tick, 60_000);
+  }, 60_000 - (Date.now() % 60_000));
+</script>

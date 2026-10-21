@@ -1,0 +1,35 @@
+---
+/*
+ * Placeholder — ocupa o lugar de imagens e vídeos enquanto os arquivos reais não entram.
+ * Mantém a proporção original para o layout não "pular" quando a mídia for trocada.
+ * As URLs originais de cada mídia estão em /content-archive.
+ */
+interface Props {
+  width: number;
+  height: number;
+  label?: string;
+  round?: boolean; // círculo (avatar)
+  class?: string;
+}
+
+const { width, height, label = "", round = false, class: className } = Astro.props;
+---
+
+<div
+  class:list={["placeholder", { round }, className]}
+  style={`aspect-ratio: ${width} / ${height};`}
+  role={label ? "img" : undefined}
+  aria-label={label || undefined}
+  aria-hidden={label ? undefined : "true"}
+>
+</div>
+
+<style>
+  .placeholder {
+    width: 100%;
+    background: var(--color-border);
+  }
+  .round {
+    border-radius: var(--radius-round);
+  }
+</style>

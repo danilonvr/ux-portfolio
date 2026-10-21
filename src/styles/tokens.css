@@ -1,0 +1,132 @@
+/*
+ * TOKENS — fonte única de valores visuais do site.
+ * Documentação e regras de uso: /DESIGN-SYSTEM.md
+ *
+ * Regra: componentes NUNCA usam valores soltos (hex, px de espaçamento, tamanhos de fonte).
+ * Se um valor novo for necessário, ele entra aqui primeiro e é documentado no DESIGN-SYSTEM.md.
+ *
+ * Breakpoints (iguais aos do Framer):
+ *   phone   : até 809px
+ *   tablet  : 810px – 1199px
+ *   desktop : 1200px em diante
+ * CSS custom properties não funcionam dentro de @media, então os breakpoints
+ * ficam escritos direto nas media queries: (max-width: 809.98px) e (max-width: 1199.98px).
+ */
+
+:root {
+  /* ---------- Cor ---------- */
+  --color-bg: #f6f6f6;                    /* fundo da página */
+  --color-text: #050505;                  /* texto principal, fundo de botão primário */
+  --color-text-80: rgb(5 5 5 / 0.8);      /* texto de corpo, links de navegação */
+  --color-text-60: rgb(5 5 5 / 0.6);      /* rótulos e títulos secundários */
+  --color-text-muted: #9fa0a3;            /* metadados (ex.: "Brasília, Brazil") */
+  --color-on-dark: #f6f6f6;               /* texto sobre fundo escuro */
+  --color-accent: #00ae9d;                /* hover de links */
+  --color-border: rgb(5 5 5 / 0.1);       /* linhas divisórias */
+  --color-glass: rgb(255 255 255 / 0.5);  /* pílulas translúcidas (nav, logo) */
+
+  /* ---------- Tipografia: famílias ---------- */
+  --font-serif: "Poltawski Nowy", "Poltawski Nowy Placeholder", serif;
+  --font-sans: "Inter", "Inter Placeholder", sans-serif;
+  --font-clock: "Manrope", "Manrope Placeholder", sans-serif;
+
+  /* ---------- Tipografia: estilos (valores do desktop) ----------
+   * Nome = papel do texto, não o tamanho. Line-height de todos os serifados = 1.2.
+   */
+  --text-heading-xs-size: 14px;    /* nome no logo */
+  --text-heading-sm-size: 18px;    /* rótulos serifados: "Lets talk?", "Index", "Brazil" */
+  --text-heading-md-size: 22px;    /* links do footer */
+  --text-heading-cta-size: 28px;   /* frase de CTA do footer */
+
+  --text-body-size: 16px;          /* corpo de texto */
+  --text-body-line: 1.4;
+  --text-nav-size: 13px;           /* itens da nav */
+  --text-nav-tracking: 0.03em;     /* = 0.39px em 13px */
+  --text-label-size: 12px;         /* botões e rótulos em caixa alta */
+  --text-label-line: 1.1;
+  --text-caption-size: 12px;       /* metadados pequenos */
+  --text-clock-size: 18px;         /* relógio do footer (igual em todos os breakpoints) */
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+
+  /* ---------- Espaçamento ----------
+   * Escala usada pelo site. Os nomes descrevem o valor, para leitura fácil no código.
+   */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-5: 5px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-30: 30px;
+  --space-40: 40px;
+  --space-50: 50px;
+  --space-60: 60px;
+  --space-80: 80px;
+  --space-100: 100px;
+
+  /* ---------- Layout ---------- */
+  --container-max: 1200px;
+  --page-gutter: var(--space-40);        /* padding lateral da página */
+  --header-pad-y: var(--space-24);
+  --header-height: 92px;                 /* usado pelo espaçador abaixo do header fixo */
+  --footer-offset: var(--space-100);     /* espaço acima do footer */
+  --footer-pad-top: var(--space-100);
+  --footer-gap: var(--space-100);
+
+  /* ---------- Raio ---------- */
+  --radius-pill: 50px;     /* botões e itens de nav */
+  --radius-round: 100px;   /* container da nav, avatar */
+
+  /* ---------- Efeitos ---------- */
+  --blur-glass: blur(10px);
+
+  /* ---------- Movimento ----------
+   * Aproximação dos padrões do Framer. Calibrar quando formos refinar.
+   */
+  --duration-fast: 200ms;
+  --duration-base: 300ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ---------- Ícones ---------- */
+  --icon-sm: 12px;
+  --icon-md: 14px;
+  --icon-lg: 24px;
+  --avatar-size: 34px;
+}
+
+/* ---------- Tablet: 810px – 1199px ---------- */
+@media (max-width: 1199.98px) {
+  :root {
+    --text-heading-sm-size: 17px;
+    --text-heading-md-size: 21px;
+    --text-heading-cta-size: 26px;
+
+    --page-gutter: var(--space-30);
+    --header-pad-y: var(--space-20);
+    --header-height: 84px;
+    --footer-offset: var(--space-80);
+    --footer-pad-top: var(--space-80);
+    --footer-gap: var(--space-80);
+  }
+}
+
+/* ---------- Phone: até 809px ---------- */
+@media (max-width: 809.98px) {
+  :root {
+    --text-heading-sm-size: 16px;
+    --text-heading-md-size: 20px;
+    --text-heading-cta-size: 24px;
+
+    --page-gutter: var(--space-20);
+    --header-pad-y: var(--space-20);
+    --header-height: 74px;
+    --footer-offset: var(--space-60);
+    --footer-pad-top: var(--space-60);
+    --footer-gap: var(--space-60);
+  }
+}

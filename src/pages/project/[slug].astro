@@ -1,0 +1,19 @@
+---
+/*
+ * Página de case — TEMPORÁRIA.
+ * O template novo será desenhado depois. Conteúdo guardado em /content-archive/cases.
+ * As URLs são as mesmas do Framer para não quebrar links já compartilhados.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageStub from "../../components/PageStub.astro";
+
+export function getStaticPaths() {
+  return [{ params: { slug: "atraqui" } }, { params: { slug: "df-no-ponto" } }];
+}
+
+const { slug } = Astro.params;
+---
+
+<BaseLayout>
+  <PageStub name={`Case: ${slug}`} />
+</BaseLayout>

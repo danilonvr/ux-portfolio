@@ -1,0 +1,42 @@
+---
+/*
+ * Button — botão-link primário (pílula preta, texto em caixa alta + seta).
+ * Usado em: "Get in Touch" (header), "Resume" (footer).
+ * Spec: DESIGN-SYSTEM.md → Componentes → Button
+ */
+import Icon from "./Icon.astro";
+
+interface Props {
+  href: string;
+  external?: boolean; // abre em nova aba
+}
+
+const { href, external = false } = Astro.props;
+---
+
+<a
+  class="button text-label"
+  href={href}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
+>
+  <span><slot /></span>
+  <Icon name="arrow-up-right" size={14} />
+</a>
+
+<style>
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-5);
+    padding: var(--space-8) var(--space-16);
+    border-radius: var(--radius-pill);
+    background: var(--color-text);
+    color: var(--color-on-dark);
+    white-space: nowrap;
+    /* No Framer o botão tem altura fixa de 36px */
+    min-height: 36px;
+  }
+  /* O Framer não tem estado de hover visível neste botão. */
+</style>

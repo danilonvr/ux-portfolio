@@ -1,0 +1,20 @@
+---
+/*
+ * Analytics — espaço reservado. DESLIGADO por enquanto: este componente não carrega nada.
+ *
+ * O site no Framer carregava:
+ *   - Google Analytics 4 (G-KGX8JCKDNX)
+ *   - Hotjar (3595417)
+ *
+ * Para religar no futuro:
+ *   1. Preencha PUBLIC_GA_ID e PUBLIC_HOTJAR_ID no arquivo .env (modelo em .env.example).
+ *   2. Adicione os scripts oficiais de cada ferramenta abaixo, dentro de {gaId && (...)}.
+ *   3. Avalie o aviso de cookies/consentimento (LGPD) antes de publicar.
+ *
+ * Ele já está incluído no <head> do BaseLayout, então só este arquivo muda.
+ */
+const gaId = import.meta.env.PUBLIC_GA_ID;
+const hotjarId = import.meta.env.PUBLIC_HOTJAR_ID;
+void gaId;
+void hotjarId;
+---

@@ -1,0 +1,24 @@
+---
+/*
+ * PageStub — TEMPORÁRIO. Marca páginas que ainda não foram construídas.
+ * Remover quando a página real entrar (ordem: Home → About → template de case).
+ */
+interface Props {
+  name: string;
+}
+const { name } = Astro.props;
+---
+
+<section class="stub">
+  <div class="container">
+    <p class="text-caption">[em construção] {name}</p>
+  </div>
+</section>
+
+<style>
+  .stub {
+    padding: var(--space-100) var(--page-gutter);
+    min-height: 50vh;
+    color: var(--color-text-muted);
+  }
+</style>

@@ -1,0 +1,303 @@
+---
+/*
+ * Header — fixo no topo, com espaçador para o conteúdo não ficar por baixo.
+ *
+ * Variantes (iguais ao Framer):
+ *   desktop (≥1200): logo em pílula translúcida | nav em pílula | botão "Get in Touch"
+ *   tablet  (810–1199): igual ao desktop, mas o logo sem pílula
+ *   phone   (<810): logo + botão "Menu"; o menu abre expandindo o header para baixo
+ *
+ * Spec: DESIGN-SYSTEM.md → Componentes → Header
+ */
+import Button from "./Button.astro";
+import Placeholder from "./Placeholder.astro";
+import { site, nav, links } from "../data/site";
+
+// Item ativo = página atual. "Work" é uma âncora da Home, então nunca fica ativo (igual ao Framer).
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isActive = (href: string) => href === path;
+---
+
+<div class="header-spacer" aria-hidden="true"></div>
+
+<header class="site-header" data-open="false">
+  <div class="inner container">
+    <div class="bar">
+      <a class="logo" href="/" aria-label={`${site.name} — Home`}>
+        <!-- Avatar: placeholder até a foto entrar -->
+        <span class="avatar"><Placeholder width={1} height={1} round /></span>
+        <span class="logo-text">
+          <span class="text-heading-xs logo-name">{site.name}</span>
+          <span class="text-caption logo-location">{site.location}</span>
+        </span>
+      </a>
+
+      <nav class="nav nav--bar" aria-label="Principal">
+        {nav.map((item) => (
+          <a
+            class:list={["nav-item text-nav", { active: isActive(item.href) }]}
+            href={item.href}
+            aria-current={isActive(item.href) ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+
+      <div class="action action--bar">
+        <Button href={links.linkedin} external>Get in Touch</Button>
+      </div>
+
+      <button
+        class="menu-toggle text-label"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <span class="menu-toggle-label">Menu</span>
+        <span class="menu-icon" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+      </button>
+    </div>
+
+    <!-- Painel do menu mobile: fechado por padrão (inert = fora do foco do teclado) -->
+    <div class="mobile-panel" id="mobile-menu" inert>
+      <div class="mobile-panel-clip">
+        <div class="mobile-panel-content">
+          <nav class="nav nav--panel" aria-label="Principal (mobile)">
+            {nav.map((item) => (
+              <a
+                class:list={["nav-item text-nav", { active: isActive(item.href) }]}
+                href={item.href}
+                aria-current={isActive(item.href) ? "page" : undefined}
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
+          <Button href={links.linkedin} external>Get in Touch</Button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* ---------- Estrutura ---------- */
+  .header-spacer {
+    height: var(--header-height);
+  }
+
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 10;
+    padding: var(--header-pad-y) var(--page-gutter);
+    background: var(--color-bg);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 44px;
+  }
+
+  /* ---------- Logo ---------- */
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    /* Desktop: pílula translúcida */
+    padding: var(--space-4) var(--space-12) var(--space-4) var(--space-4);
+    border-radius: var(--radius-pill);
+    background: var(--color-glass);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+  }
+
+  .avatar {
+    display: block;
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logo-name {
+    color: var(--color-text);
+  }
+
+  .logo-location {
+    color: var(--color-text-muted);
+  }
+
+  /* ---------- Nav ---------- */
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-10);
+  }
+
+  .nav--bar {
+    padding: var(--space-4);
+    border-radius: var(--radius-round);
+    background: var(--color-glass);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+  }
+
+  .nav-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-10) var(--space-16);
+    border-radius: var(--radius-pill);
+    color: var(--color-text-80);
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
+
+  .nav-item:hover {
+    color: var(--color-accent);
+  }
+
+  .nav-item.active {
+    background: var(--color-text);
+    color: var(--color-on-dark);
+  }
+
+  /* ---------- Toggle do menu (só phone) ---------- */
+  .menu-toggle {
+    display: none;
+    align-items: center;
+    gap: var(--space-5);
+    color: var(--color-text);
+  }
+
+  .menu-icon {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 12px;
+    height: 10px;
+  }
+
+  .menu-icon span {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: var(--color-text-muted);
+    transition:
+      transform var(--duration-base) var(--ease-standard),
+      opacity var(--duration-fast) var(--ease-standard);
+  }
+
+  /* Aberto: linhas de cima e de baixo viram um X, a do meio some */
+  .site-header[data-open="true"] .menu-icon span:nth-child(1) {
+    transform: translateY(4.5px) rotate(45deg);
+  }
+  .site-header[data-open="true"] .menu-icon span:nth-child(2) {
+    opacity: 0;
+  }
+  .site-header[data-open="true"] .menu-icon span:nth-child(3) {
+    transform: translateY(-4.5px) rotate(-45deg);
+  }
+
+  /* ---------- Painel mobile ---------- */
+  .mobile-panel {
+    display: none;
+  }
+
+  /* ---------- Tablet ---------- */
+  @media (max-width: 1199.98px) {
+    .logo {
+      padding: 0;
+      background: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+
+  /* ---------- Phone ---------- */
+  @media (max-width: 809.98px) {
+    .bar {
+      min-height: 34px;
+    }
+
+    .nav--bar,
+    .action--bar {
+      display: none;
+    }
+
+    .menu-toggle {
+      display: inline-flex;
+    }
+
+    /* Altura animada com a técnica de grid 0fr → 1fr */
+    .mobile-panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows var(--duration-base) var(--ease-standard);
+    }
+
+    .site-header[data-open="true"] .mobile-panel {
+      grid-template-rows: 1fr;
+    }
+
+    .mobile-panel-clip {
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .mobile-panel-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-50);
+      /* 50px abaixo da barra; 30px + 20px do header = 50px no fim */
+      padding: var(--space-50) 0 var(--space-30);
+    }
+
+    .nav--panel {
+      flex-direction: column;
+      gap: var(--space-20);
+    }
+  }
+</style>
+
+<script>
+  // Abre/fecha o menu mobile. Fecha com Esc e ao voltar para tablet/desktop.
+  const header = document.querySelector<HTMLElement>(".site-header");
+  const toggle = header?.querySelector<HTMLButtonElement>(".menu-toggle");
+  const label = header?.querySelector<HTMLElement>(".menu-toggle-label");
+  const panel = header?.querySelector<HTMLElement>(".mobile-panel");
+
+  function setOpen(open: boolean) {
+    if (!header || !toggle || !label || !panel) return;
+    header.dataset.open = String(open);
+    toggle.setAttribute("aria-expanded", String(open));
+    label.textContent = open ? "Close" : "Menu";
+    panel.inert = !open;
+  }
+
+  toggle?.addEventListener("click", () => {
+    setOpen(header?.dataset.open !== "true");
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && header?.dataset.open === "true") {
+      setOpen(false);
+      toggle?.focus();
+    }
+  });
+
+  window.matchMedia("(min-width: 810px)").addEventListener("change", (event) => {
+    if (event.matches) setOpen(false);
+  });
+</script>

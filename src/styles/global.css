@@ -1,0 +1,141 @@
+/*
+ * GLOBAL — reset, base da página e estilos de texto reutilizáveis.
+ * Valores vêm de tokens.css. Documentação: /DESIGN-SYSTEM.md
+ */
+
+@import "./tokens.css";
+
+/* ---------- Reset mínimo ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+/* Foco visível só para teclado */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- Layout ---------- */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+}
+
+/* Texto só para leitores de tela */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Estilos de texto ----------
+ * Use estas classes em vez de definir fonte/tamanho em cada componente.
+ */
+.text-heading-xs,
+.text-heading-sm,
+.text-heading-md,
+.text-heading-cta {
+  font-family: var(--font-serif);
+  font-weight: var(--weight-medium);
+  line-height: 1.2;
+}
+.text-heading-xs  { font-size: var(--text-heading-xs-size); }
+.text-heading-sm  { font-size: var(--text-heading-sm-size); }
+.text-heading-md  { font-size: var(--text-heading-md-size); }
+.text-heading-cta { font-size: var(--text-heading-cta-size); }
+
+.text-body {
+  font-family: var(--font-sans);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line);
+  font-weight: var(--weight-regular);
+}
+
+.text-nav {
+  font-family: var(--font-sans);
+  font-size: var(--text-nav-size);
+  line-height: 1.2;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--text-nav-tracking);
+}
+
+.text-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-label-size);
+  line-height: var(--text-label-line);
+  font-weight: var(--weight-medium);
+  text-transform: uppercase;
+}
+
+.text-caption {
+  font-family: var(--font-sans);
+  font-size: var(--text-caption-size);
+  line-height: 1.2;
+  font-weight: var(--weight-regular);
+}
+
+/* ---------- Movimento reduzido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

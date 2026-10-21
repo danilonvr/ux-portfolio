@@ -1,0 +1,45 @@
+---
+/*
+ * ArrowLink — link de texto em caixa alta com seta pequena.
+ * Usado em: "Contact Me" (footer), "More About me" (home).
+ * Hover: só a seta muda para a cor de destaque; o texto continua igual (como no Framer).
+ * Spec: DESIGN-SYSTEM.md → Componentes → ArrowLink
+ */
+import Icon from "./Icon.astro";
+
+interface Props {
+  href: string;
+  external?: boolean;
+}
+
+const { href, external = false } = Astro.props;
+---
+
+<a
+  class="arrow-link text-label"
+  href={href}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
+>
+  <span><slot /></span>
+  <Icon name="arrow-up-right" size={12} />
+</a>
+
+<style>
+  .arrow-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-5);
+    padding-bottom: var(--space-2);
+    color: var(--color-text);
+    white-space: nowrap;
+  }
+
+  .arrow-link :global(svg) {
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
+
+  .arrow-link:hover :global(svg) {
+    color: var(--color-accent);
+  }
+</style>
