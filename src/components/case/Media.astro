@@ -1,0 +1,51 @@
+---
+/*
+ * Media — imagem ou vídeo do case, com legenda opcional.
+ * Enquanto a mídia real não entra, mostra um placeholder com o rótulo (label) na proporção certa.
+ * Uso: <Media ratio="16/9" label="Requests screen" caption="Legenda opcional" />
+ * `src` (opcional): URL original no Framer, guardada para quando a mídia entrar.
+ */
+interface Props {
+  ratio?: string;   // "16/9", "4/3", "21/9"…
+  label: string;    // descrição do que a mídia mostra (também é o texto alternativo)
+  caption?: string;
+  src?: string;
+  kind?: "image" | "video";
+}
+
+const { ratio = "16/9", label, caption, kind = "image" } = Astro.props;
+---
+
+<figure class="media">
+  <div class="frame" style={`aspect-ratio: ${ratio.replace("/", " / ")}`} role="img" aria-label={label}>
+    <span class="text-small placeholder-label">[{kind === "video" ? "Vídeo" : "Imagem"} · {label}]</span>
+  </div>
+  {caption && <figcaption class="text-small caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .media {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    margin: var(--space-24) 0;
+  }
+
+  .frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-16);
+    border-radius: var(--radius-lg);
+    background: var(--color-border);
+  }
+
+  .placeholder-label {
+    color: var(--color-text-60);
+    text-align: center;
+  }
+
+  .caption {
+    color: var(--color-text-60);
+  }
+</style>

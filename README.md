@@ -39,7 +39,7 @@ content-archive/        ← conteúdo extraído do Framer, guardado para uso fut
 - [x] Footer (com relógio ao vivo)
 - [x] Home (capas dos projetos ainda como placeholder)
 - [x] About (fotos e logos ainda como placeholder)
-- [ ] Template de case (será redesenhado)
+- [~] Template de case: layout B em teste (case EMAP migrado; DF no Ponto ainda pendente)
 
 **Fase 2 — evolução:** animações e interações novas, depois da paridade aprovada.
 

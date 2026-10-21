@@ -68,6 +68,7 @@ O CSS é escrito **desktop primeiro**: o valor padrão é o do desktop e as medi
 | Classe               | Família | Peso | Desktop | Tablet | Phone | Line-height | Uso / extra                         |
 |----------------------|---------|------|---------|--------|-------|-------------|-------------------------------------|
 | `.text-display`      | serif   | 400  | 64      | 52     | 38    | 1.2         | Título do hero                      |
+| `.text-title`        | serif   | 400  | 52      | 44     | 34    | 1.15        | Título da página de case            |
 | `.text-heading-cta`  | serif   | 500  | 28      | 26     | 24    | 1.2         | Frase de CTA do footer              |
 | `.text-heading-lg`   | serif   | 500  | 26      | 24     | 22    | 1.2         | Título de seção ("Projects")        |
 | `.text-heading-card` | serif   | 500  | 24      | 22     | 20    | 1.2         | Título do card de projeto           |
@@ -258,6 +259,24 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 - **Hover:** fundo `--color-surface` e seta de 16px que cresce ao lado do nome (`--duration-base`).
 - Grade: 3 colunas (desktop), 2 (tablet), 1 (phone), gap 20px.
 
+### Página de case (template B)
+`src/pages/project/[slug].astro` + um `.mdx` por case em `src/content/cases/` (guia: `src/content/cases/README.md`).
+
+- **CaseHero:** categoria, título (`.text-title`), subtítulo (`.text-lead`) à esquerda; ficha técnica (Company, Role, Duration, Year) à direita com divisórias; capa 21:9 embaixo, largura total.
+- **Corpo:** sumário (240px) à esquerda + conteúdo à direita, gap 100px. Abaixo de 1200px, empilham.
+- **Texto do .mdx:** `##` = `.text-heading-lg` com 80px acima; `###` = `.text-heading-item`; parágrafos `.text-body` em `--color-text-80`; lista numerada com divisórias e números `01`.
+- **Blocos:** Columns, Media, Gallery, Grid/GridItem, Csd/CsdColumn, Quote (ver o guia). Todos usam só tokens.
+
+### CaseToc (sumário com scroll-spy)
+`src/components/case/CaseToc.astro`
+
+- Montado automaticamente a partir dos títulos `##` do case.
+- **desktop (≥1200px):** coluna fixa ao rolar (`top` = altura do header + 24px). Item ativo em `--color-text`; demais em `--color-text-60`; hover `--color-accent`. Uma barra de 2px desliza até o item ativo (`--duration-base`, `--ease-out`).
+- **tablet e phone:** barra fixa abaixo do header ("On this page" + seção atual + seta). Toca e abre a lista; Esc ou toque fora fecham.
+- **Quando uma seção fica ativa:** quando o título passa de 25% da área visível abaixo do header. No fim da página, a última seção fica ativa. Títulos lado a lado (ex.: Context | Solution) acendem juntos e a barra cobre os dois.
+- **Clique:** rolagem suave até a seção, parando abaixo do header (e da barra, no mobile); o destaque trava no item clicado até a rolagem terminar; atualiza o `#` da URL; leva o foco do teclado para a seção. Com movimento reduzido, a rolagem é instantânea.
+- **Acessibilidade:** `<nav>` com rótulo; item atual com `aria-current="location"`.
+
 ### Placeholder
 `src/components/Placeholder.astro` — ocupa o lugar de imagens e vídeos, mantendo a proporção. Fundo `--color-border`.
 - `round`: círculo (avatar).
@@ -274,6 +293,9 @@ Registro do que foi decidido e por quê. Mais recente em cima.
 
 | Data       | Decisão | Motivo |
 |------------|---------|--------|
+| 2026-10-21 | Template de case = Direção B do canvas (abertura dividida + sumário à esquerda). Seções que a B não desenhou seguem a mesma linguagem (divisórias em vez de cards). | Escolha do Danilo após comparar as opções A, B e C. |
+| 2026-10-21 | Cases escritos em MDX; o sumário vem dos títulos `##`. | Criar um case novo = escrever o texto; nada de mexer no layout. |
+| 2026-10-21 | Tablet e phone: sumário vira barra compacta fixa abaixo do header. | Recomendação; a validar no teste. |
 | 2026-10-21 | Contornos de 1px desenhados por cima do elemento (`.with-border`), em cards de projeto, experiência, itens da stack e topo do footer. | O Framer usa `::after`; eu não tinha detectado nas etapas de header/footer e Home. Corrigido. |
 | 2026-10-21 | Relógio passa a mostrar a hora local do visitante (antes: Brasília fixo). | Comportamento real do Framer, verificado mudando o fuso do navegador. |
 | 2026-10-21 | O que no Framer parecia um "ticker" é um slideshow: troca de item a cada 4s, não rolagem contínua. Recriado como RoleSlideshow. | Comportamento medido no site. |

@@ -1,0 +1,34 @@
+---
+/*
+ * Csd — matriz CSD (Certezas, Suposições, Dúvidas) em 3 colunas.
+ * Cada coluna tem uma linha no topo com intensidade diferente (forte → média → suave).
+ * Uso:
+ *   <Csd>
+ *     <CsdColumn title="Certainties" tone="strong">
+ *
+ *     - Item…
+ *     </CsdColumn>
+ *   </Csd>
+ */
+---
+
+<div class="csd">
+  <slot />
+</div>
+
+<style>
+  .csd {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-24);
+    align-items: start;
+    margin: var(--space-24) 0;
+  }
+
+  @media (max-width: 809.98px) {
+    .csd {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-40);
+    }
+  }
+</style>

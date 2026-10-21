@@ -1,0 +1,67 @@
+---
+/*
+ * Quote — fala de participante.
+ *   variant="highlight": citação em destaque, fundo escuro e texto grande (uma por seção).
+ *   variant="plain": comentário curto, com linha no topo (para grades de feedback).
+ * Uso: <Quote author="P1" variant="highlight">The process has improved a lot!…</Quote>
+ */
+interface Props {
+  author: string;
+  variant?: "highlight" | "plain";
+}
+
+const { author, variant = "plain" } = Astro.props;
+---
+
+<figure class:list={["quote", `quote--${variant}`]}>
+  <blockquote class:list={["quote-text", variant === "highlight" ? "text-heading-cta" : "text-body"]}>
+    <slot />
+  </blockquote>
+  <figcaption class="text-small quote-author">{author}</figcaption>
+</figure>
+
+<style>
+  .quote {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    margin: var(--space-24) 0;
+  }
+
+  .quote-text :global(p) {
+    margin: 0;
+  }
+
+  /* Destaque */
+  .quote--highlight {
+    padding: var(--space-30);
+    border-radius: var(--radius-lg);
+    background: var(--color-text);
+  }
+
+  .quote--highlight .quote-text {
+    color: var(--color-on-dark);
+    font-weight: var(--weight-regular);
+  }
+
+  .quote--highlight .quote-author {
+    color: rgb(246 246 246 / 0.7);
+  }
+
+  /* Simples */
+  .quote--plain {
+    gap: var(--space-8);
+    margin: 0;
+    padding-top: var(--space-12);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .quote--plain .quote-text {
+    color: var(--color-text-80);
+  }
+
+  .quote--plain .quote-author {
+    order: -1;
+    color: var(--color-text-60);
+  }
+</style>

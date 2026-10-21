@@ -37,6 +37,7 @@
    * Nome = papel do texto, não o tamanho. Line-height de todos os serifados = 1.2.
    */
   --text-display-size: 64px;       /* título do hero (peso regular) */
+  --text-title-size: 52px;         /* título da página de case (peso regular) */
   --text-heading-xs-size: 14px;    /* nome no logo */
   --text-heading-sm-size: 18px;    /* rótulos serifados: "Lets talk?", "Index", "Hi, I'm Danilo!" */
   --text-heading-md-size: 22px;    /* links do footer */
@@ -119,6 +120,7 @@
 @media (max-width: 1199.98px) {
   :root {
     --text-display-size: 52px;
+    --text-title-size: 44px;
     --text-heading-sm-size: 17px;
     --text-heading-md-size: 21px;
     --text-heading-item-size: 19px;
@@ -141,6 +143,7 @@
 @media (max-width: 809.98px) {
   :root {
     --text-display-size: 38px;
+    --text-title-size: 34px;
     --text-heading-sm-size: 16px;
     --text-heading-md-size: 20px;
     --text-heading-item-size: 18px;

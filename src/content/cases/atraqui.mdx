@@ -1,0 +1,189 @@
+---
+title: "Smart Line Up: An Innovative Approach to Port Queue Management"
+subtitle: "An application developed to automate ship queue management, reducing demurrage costs, and increasing the port’s flow"
+category: "Product Design"
+company: "EMAP"
+role: "Product Designer"
+duration: "1 Month"
+year: "2025"
+cover: "Vídeo de capa do Smart Line Up"
+---
+{/*
+  Case EMAP — texto copiado do Framer (content-archive/cases/atraqui.md).
+  Cada "## Título" vira um item do sumário. Blocos disponíveis: src/content/cases/README.md
+  `src` nas mídias = arquivo original no Framer, para quando a mídia real entrar.
+*/}
+import Columns from "../../components/case/Columns.astro";
+import Media from "../../components/case/Media.astro";
+import Gallery from "../../components/case/Gallery.astro";
+import Grid from "../../components/case/Grid.astro";
+import GridItem from "../../components/case/GridItem.astro";
+import Csd from "../../components/case/Csd.astro";
+import CsdColumn from "../../components/case/CsdColumn.astro";
+import Quote from "../../components/case/Quote.astro";
+import ArrowLink from "../../components/ArrowLink.astro";
+
+<Columns>
+<div>
+
+## Context
+
+Porto do Itaqui is one of Brazil's 10 largest ports, managed by EMAP. Their operations were held back by a manual line-up process run entirely on spreadsheets, where ship request data was entered by hand, queue organisation was slow and inconsistent, and business rules were hard to apply at scale.
+
+</div>
+<div>
+
+## Solution
+
+To solve this, EMAP partnered with UNDB's Software House to build a port queue automation system that collects ship request data via API and registers each vessel into the berthing queue according to the company's business rules, fully replacing the legacy spreadsheet.
+
+The solution has simplified workflows, reduced demurrage costs (fees arising from delays in loading/unloading) and increased the port's operational capacity.
+
+</div>
+</Columns>
+
+## Expected Results
+
+<Grid>
+  <GridItem title="System Adoption and Continued Usage">Users are expected to keep using the developed system.</GridItem>
+  <GridItem title="Expected Reduction in demurrage rate">Less fees charged long periods staying in the port.</GridItem>
+  <GridItem title="Optimisation of Analysis & Recording">More productivity by employees using the Line Up.</GridItem>
+  <GridItem title="Higher number of ships served per period">Improved flow caused by port queue's automation.</GridItem>
+</Grid>
+
+<Media ratio="1120/755" label="New Line Up System" src="https://framerusercontent.com/images/W138MN8iukHPzbG5xOHN3n08Jo.png" />
+
+<Media ratio="1120/755" label="Old LineUp Spreadsheet" src="https://framerusercontent.com/images/ttOmZqBGKxAMoOwaxshp9MjhZq8.png" />
+
+## Research Insights
+
+A research was conducted using public databases and port websites featuring spreadsheets similar to Itaqui's Line-Up. The goal was to analyse how other companies shared their queues.
+
+### Key Points
+
+1. Most ports use similar properties to display queues, both in terms of ships and the berths they occupy.
+2. The spreadsheets contain complex information, varying according to each port's specific needs.
+3. Most of the analysed line-ups are organised by berth, making navigating and finding information easier.
+4. The systems include dedicated pages for sharing details about docked vessels.
+
+### CSD
+
+<Csd>
+<CsdColumn title="Certainties" tone="strong">
+
+- The current process is problematic for users as it requires significant time and effort.
+- There is a certain level of resistance from the team towards using complex systems.
+- The TOS+ (Secondary System) does’nt meet user needs, failing to display all relevant info.
+- User acceptance depends on how much information is available with minimal complexity.
+- The workflow involves switching between three different environments.
+- Spreadsheet-based viewing has become a habit for users.
+- Although there are business rules, some information occasionally needs to be adjusted.
+
+</CsdColumn>
+<CsdColumn title="Suppositions" tone="medium">
+
+- Users are not concerned with additional features.
+- The team appears cautious about what might be introduced next.
+- The tide table is unlikely to influence how the vessel queue is defined.
+- Manual reviews remain necessary, as line-up changes require approval from staff.
+- External clients may have some decision-making power.
+
+</CsdColumn>
+<CsdColumn title="Doubts" tone="soft">
+
+- How can the team adopt the system without rejecting it?
+- What frustrations did users experience with previous systems?
+- How willing are users to change a process that has been embedded for years?
+- What is the most effective way to present data to users?
+- How can we reduce the time users spend on their current workflow?
+- How can a new system improve the existing work process?
+- What might be the consequences of replacing a complex spreadsheet with a web-based system?
+
+</CsdColumn>
+</Csd>
+
+## Our Meeting
+
+We had a meeting to align expectations with the client. Due to access restrictions and logistical challenges, on-site visits to the company were not possible.
+
+Through in-person discussions with EMAP team members, I identified the main inefficiencies impacting their workflow.
+
+This direct approach helped to understanding real pain points, revealing critical challenges and opportunities for improvement throughout the process.
+
+<Gallery ratio="4/3" labels={["Meeting photo 1", "Meeting photo 2", "Meeting photo 3", "Meeting photo 4"]} />
+
+<Media ratio="1120/590" label="Employee's old workflow" caption="Employee's old workflow." src="https://framerusercontent.com/images/JV2p0zGGhg3P0HpArv5SieAc.png" />
+
+## Enhancing the Design Process with AI
+
+Instead of showing only static screens, I've decided to use Figma Make to illustrate each microinteraction in practice.
+
+This helped the client grasp the nuances of the interface and give precise feedback early on.
+
+The AI-powered prototype helped validate complex microinteractions and clarified the application flow for users during usability testing.
+
+<ArrowLink href="https://ashen-ebook-55819267.figma.site" external>Check the AI Prototype</ArrowLink>
+
+<Media kind="video" ratio="492/351" label="AI prototype walkthrough" src="https://framerusercontent.com/assets/XeZCm8jiAHxXFXE03rCzXXI6I.mp4" />
+
+## How it works?
+
+Through the API’s communication with the system, berth requests are displayed on the requests screen, where the user can add them to the line-up to organise the vessel queue. Initially, this addition would be carried out manually. As the project evolves, the process will become automated.
+
+<Media kind="video" ratio="1072/765" label="Requests screen" src="https://framerusercontent.com/assets/Fjx3DR9CF5GwUIkxGU1RU.mp4" />
+
+### Organising the vessel queue
+
+Ships added to the line-up are organised automatically, following the company's business rules. This accelerates the organisation process and reduces the cognitive load on operators, whose only concern becomes reviewing the queue or adjusting positions in cases of urgency.
+
+<Media kind="video" ratio="1072/765" label="Line-up queue" src="https://framerusercontent.com/assets/JE8YkGdvwsxFMDkywqxgP0PI1Rg.mp4" />
+
+### supporting Screens
+
+To add greater value to the system, coordinators and supervisors can not only create operational users, which facilitates audits and ensures tighter control over application activities, but also access the records of vessels and berths registered in the system. This simplifies database management and strengthens operational control.
+
+<Media kind="video" ratio="1072/765" label="Supporting screens" src="https://framerusercontent.com/assets/0IAr3jJ3Z7FihqQQAJRO037c.mp4" />
+
+## Usability Testing
+
+Usability tests were conducted with 6 users, responsible for using the new Line Up system, centred on:
+
+<Media ratio="1120/228" label="Usability test tasks" caption="The test focused on the new workflow that employees would have when using the system." src="https://framerusercontent.com/images/O8ZG0EcaU08UN5NqYu4XdJq8s.png" />
+
+### Highlights
+
+<Quote author="P1 👩🏻‍🦱" variant="highlight">“The process has improved a lot! Now I don't have to register and write anything, just review the results.”</Quote>
+
+<Columns>
+  <Quote author="P2 👨🏻">"It's better than I expected. I can see the agility of the map, and I like the minimalism of the system!"</Quote>
+  <Quote author="P3 👨🏻‍🦱">Suggested focussing on consulting and the use of the application, rather than on other extra features.</Quote>
+  <Quote author="P4 👩🏻">Brought up the need to include different types of visualisation so that the Line Up appeals to the most diverse users.</Quote>
+  <Quote author="P5 👩🏻‍🦱">Missed the possibility of editing and removing ship information after it has been inserted into the Line Up.</Quote>
+  <Quote author="P6 👨🏻‍🦳">Warned about compliance rules that were not followed, and the difficulty in understanding user permissions.</Quote>
+</Columns>
+
+## Multidisciplinary Team Work
+
+All the organisation and prioritisation of activities and sprints were organised by the team, with the help of feedback gathered during tests and a 2x2 matrix.
+
+This approach enabled effective communication between Design and Development, in order to maintain the integrity of the schedule and the quality of the project developed.
+
+<Media ratio="532/337" label="2x2 prioritisation matrix" caption="Matrix created after analysing the usability test feedback." src="https://framerusercontent.com/images/TR5J0cPf1LS05NcciXEuJ7kBg8.png" />
+
+## If I Had More Time,  I'd like to…
+
+<Grid>
+  <GridItem title="Setup Google Analytics">To better manage the pre-established metrics.</GridItem>
+  <GridItem title="Conduct More Usability Tests">To validate the new and updated features.</GridItem>
+  <GridItem title="Create a New Project Roadmap">To evolve and enhance the developed system.</GridItem>
+  <GridItem title="Prototype New features">To strengthen the workflow and improve experiece.</GridItem>
+</Grid>
+
+## Lessons learned
+
+<Grid>
+  <GridItem title="Align and Justify">By explaining the importance of design, I made the client feel more confident that everything would be completed on time.</GridItem>
+  <GridItem title="Documentation">Documenting research and processes helped explain design decisions to both the client and the team.</GridItem>
+  <GridItem title="Paying attention to the prototype">Creating a realistic scenario made users feel more comfortable and revealed some points during usability testing.</GridItem>
+  <GridItem title="Shared success">Multidisciplinary collaboration supported the articulation of decisions made and was essential to the project's success.</GridItem>
+</Grid>

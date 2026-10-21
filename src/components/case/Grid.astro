@@ -1,0 +1,42 @@
+---
+/*
+ * Grid — grade de itens separados por linhas finas, sem cards (Direção B).
+ * Usado em: Expected Results, If I Had More Time, Lessons learned, Pain Points…
+ * 2 colunas no desktop/tablet, 1 no phone. Os itens são <GridItem>.
+ * Uso:
+ *   <Grid>
+ *     <GridItem title="System Adoption">Users are expected…</GridItem>
+ *   </Grid>
+ */
+---
+
+<div class="grid">
+  <slot />
+</div>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: var(--space-24) 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  /* Coluna da esquerda: linha à direita e sem respiro à esquerda */
+  .grid > :global(:nth-child(odd)) {
+    padding-left: 0;
+    border-right: 1px solid var(--color-border);
+  }
+
+  @media (max-width: 809.98px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .grid > :global(*) {
+      padding-left: 0;
+      padding-right: 0;
+      border-right: 0 !important;
+    }
+  }
+</style>

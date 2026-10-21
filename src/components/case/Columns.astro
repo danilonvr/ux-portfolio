@@ -1,0 +1,44 @@
+---
+/*
+ * Columns — divide o conteúdo em 2 ou 3 colunas iguais (ex.: Context | Solution).
+ * Cada filho direto vira uma coluna. No phone, empilha em uma coluna.
+ * Uso no .mdx:
+ *   <Columns>
+ *   <div>
+ *
+ *   ## Context
+ *   Texto…
+ *   </div>
+ *   <div>…</div>
+ *   </Columns>
+ */
+interface Props {
+  cols?: 2 | 3;
+}
+
+const { cols = 2 } = Astro.props;
+---
+
+<div class="columns" style={`--cols: ${cols}`}>
+  <slot />
+</div>
+
+<style>
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    gap: var(--space-40);
+    align-items: start;
+  }
+
+  /* Remove a margem de cima do primeiro elemento de cada coluna */
+  .columns > :global(*) > :global(:first-child) {
+    margin-top: 0;
+  }
+
+  @media (max-width: 809.98px) {
+    .columns {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

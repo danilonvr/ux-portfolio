@@ -1,0 +1,128 @@
+---
+/*
+ * CaseHero — abertura da página de case (Direção B).
+ * Esquerda: categoria, título e subtítulo · Direita: ficha técnica · Embaixo: capa larga (21:9).
+ * Os dados vêm do cabeçalho (frontmatter) do arquivo .mdx do case.
+ */
+import Placeholder from "../Placeholder.astro";
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  category: string;
+  company: string;
+  role: string;
+  duration: string;
+  year: string;
+  cover?: string;
+}
+
+const { title, subtitle, category, company, role, duration, year, cover = "Capa do case" } = Astro.props;
+const facts = [
+  { label: "Company", value: company },
+  { label: "Role", value: role },
+  { label: "Duration", value: duration },
+  { label: "Year", value: year },
+];
+---
+
+<section class="case-hero">
+  <div class="inner container">
+    <div class="intro">
+      <div class="heading">
+        <p class="text-small category">{category}</p>
+        <h1 class="text-title title">{title}</h1>
+        {subtitle && <p class="text-lead subtitle">{subtitle}</p>}
+      </div>
+      <dl class="facts">
+        {facts.map((fact) => (
+          <div class="fact">
+            <dt class="text-small">{fact.label}</dt>
+            <dd class="text-body">{fact.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <div class="cover">
+      <Placeholder width={21} height={9} label={cover} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .case-hero {
+    padding: var(--section-pad-y) var(--page-gutter);
+  }
+
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-50);
+  }
+
+  .intro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--space-40) var(--space-100);
+  }
+
+  .heading {
+    flex: 999 1 560px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  .category {
+    color: var(--color-text-60);
+  }
+
+  .title {
+    color: var(--color-text);
+  }
+
+  .subtitle {
+    max-width: 640px;
+    color: var(--color-text-80);
+  }
+
+  .facts {
+    flex: 1 1 260px;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .fact {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-16);
+    padding: var(--space-12) 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .fact dt {
+    color: var(--color-text-60);
+  }
+
+  .fact dd {
+    color: var(--color-text);
+    text-align: right;
+  }
+
+  .cover {
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+  }
+
+  @media (max-width: 809.98px) {
+    .facts {
+      max-width: none;
+    }
+  }
+</style>

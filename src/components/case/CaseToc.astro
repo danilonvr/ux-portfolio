@@ -1,0 +1,332 @@
+---
+/*
+ * CaseToc — sumário do case ("On this page") com scroll-spy.
+ *
+ * desktop (≥1200px): coluna à esquerda, fixa enquanto a página rola.
+ *   - A seção atual fica em --color-text; as outras esmaecidas (--color-text-60).
+ *   - Uma barra de 2px desliza até o item ativo (animação principal do sumário).
+ * tablet e phone (<1200px): barra compacta fixa abaixo do header, mostrando a seção atual.
+ *   Ao tocar, abre a lista completa.
+ *
+ * A lista é montada a partir dos títulos "##" do arquivo .mdx do case.
+ * Comportamento (script no fim): destaque ao rolar, clique com rolagem suave,
+ * Esc fecha a lista no mobile, movimento reduzido = rolagem instantânea.
+ *
+ * Spec: DESIGN-SYSTEM.md → Componentes → CaseToc
+ */
+interface Props {
+  items: { slug: string; text: string }[];
+  label?: string;
+}
+
+const { items, label = "On this page" } = Astro.props;
+---
+
+<!-- Desktop: coluna lateral -->
+<nav class="toc" aria-label={label} data-toc>
+  <p class="text-small toc-label">{label}</p>
+  <div class="toc-track">
+    <span class="toc-indicator" aria-hidden="true" data-toc-indicator></span>
+    <ol class="toc-list">
+      {items.map((item, i) => (
+        <li>
+          <a class="toc-link text-small" href={`#${item.slug}`} data-toc-link data-index={i}>
+            {item.text}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
+</nav>
+
+<!-- Tablet e phone: barra compacta -->
+<nav class="toc-bar" aria-label={`${label} (compacto)`} data-toc-bar>
+  <button class="toc-bar-button" type="button" aria-expanded="false" aria-controls="toc-bar-panel">
+    <span class="text-small toc-bar-label">{label}</span>
+    <span class="text-body toc-bar-current" data-toc-current>{items[0]?.text}</span>
+    <svg class="toc-bar-chevron" viewBox="0 0 256 256" width="16" height="16" aria-hidden="true" fill="currentColor">
+      <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z" />
+    </svg>
+  </button>
+  <div class="toc-bar-panel" id="toc-bar-panel" hidden>
+    <ol class="toc-bar-list">
+      {items.map((item, i) => (
+        <li>
+          <a class="toc-link text-body" href={`#${item.slug}`} data-toc-link data-index={i}>
+            {item.text}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
+</nav>
+
+<style>
+  /* ---------- Desktop: coluna lateral fixa ---------- */
+  .toc {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-24));
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    width: 240px;
+    flex-shrink: 0;
+  }
+
+  .toc-label {
+    color: var(--color-text-60);
+  }
+
+  .toc-track {
+    position: relative;
+    border-left: 1px solid var(--color-border);
+  }
+
+  /* Barra que desliza até o item ativo */
+  .toc-indicator {
+    position: absolute;
+    left: -1px;
+    top: 0;
+    width: 2px;
+    height: var(--indicator-height, 0px);
+    background: var(--color-text);
+    transform: translateY(var(--indicator-y, 0px));
+    transition:
+      transform var(--duration-base) var(--ease-out),
+      height var(--duration-base) var(--ease-out);
+  }
+
+  .toc-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toc-link {
+    display: block;
+    padding: var(--space-8) 0 var(--space-8) var(--space-16);
+    color: var(--color-text-60);
+    transition: color var(--duration-base) var(--ease-standard);
+  }
+
+  .toc-link:hover {
+    color: var(--color-accent);
+  }
+
+  .toc-link.is-active {
+    color: var(--color-text);
+  }
+
+  /* ---------- Tablet e phone: barra compacta ---------- */
+  .toc-bar {
+    display: none;
+  }
+
+  @media (max-width: 1199.98px) {
+    .toc {
+      display: none;
+    }
+
+    .toc-bar {
+      display: block;
+      position: sticky;
+      top: var(--header-height);
+      z-index: 5;
+      /* Ocupa a largura toda da tela, além do padding da página */
+      margin-inline: calc(var(--page-gutter) * -1);
+      padding-inline: var(--page-gutter);
+      background: var(--color-bg);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .toc-bar-button {
+      display: flex;
+      align-items: center;
+      gap: var(--space-10);
+      width: 100%;
+      min-height: 48px;
+      text-align: left;
+    }
+
+    .toc-bar-label {
+      color: var(--color-text-60);
+      flex-shrink: 0;
+    }
+
+    .toc-bar-current {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--color-text);
+    }
+
+    .toc-bar-chevron {
+      flex-shrink: 0;
+      color: var(--color-text-60);
+      transition: transform var(--duration-base) var(--ease-standard);
+    }
+
+    .toc-bar-button[aria-expanded="true"] .toc-bar-chevron {
+      transform: rotate(180deg);
+    }
+
+    .toc-bar-panel {
+      padding-bottom: var(--space-12);
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+
+    .toc-bar-list .toc-link {
+      padding: var(--space-10) 0 var(--space-10) var(--space-12);
+      border-left: 2px solid transparent;
+    }
+
+    .toc-bar-list .toc-link.is-active {
+      border-left-color: var(--color-text);
+    }
+  }
+</style>
+
+<script>
+  const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]"));
+  const sidebarLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-toc] [data-toc-link]"));
+  const indicator = document.querySelector<HTMLElement>("[data-toc-indicator]");
+  const currentLabel = document.querySelector<HTMLElement>("[data-toc-current]");
+  const bar = document.querySelector<HTMLElement>("[data-toc-bar]");
+  const barButton = bar?.querySelector<HTMLButtonElement>(".toc-bar-button");
+  const barPanel = bar?.querySelector<HTMLElement>(".toc-bar-panel");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  // Os títulos de seção, na ordem do sumário
+  const headings = sidebarLinks
+    .map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
+    .filter((el): el is HTMLElement => el !== null);
+
+  // Índices ativos. Seções lado a lado (ex.: Context | Solution) ficam ativas juntas.
+  let activeIndexes: number[] = [];
+  let lockedUntil = 0; // durante a rolagem causada por um clique, o destaque não muda
+
+  const headerHeight = () =>
+    parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-height")) || 0;
+
+  // Títulos na mesma altura da página (lado a lado) formam um grupo
+  function groupOf(index: number): number[] {
+    const top = headings[index]?.getBoundingClientRect().top ?? 0;
+    return headings
+      .map((heading, i) => (Math.abs(heading.getBoundingClientRect().top - top) < 4 ? i : -1))
+      .filter((i) => i >= 0);
+  }
+
+  // Seção atual = o último título que já passou de ~25% da área visível abaixo do header
+  function findActive(): number[] {
+    const line = headerHeight() + window.innerHeight * 0.25;
+    let index = 0;
+    headings.forEach((heading, i) => {
+      if (heading.getBoundingClientRect().top <= line) index = i;
+    });
+    // Chegou ao fim da página: a última seção fica ativa mesmo que o título não tenha subido o bastante
+    const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+    if (atBottom) index = headings.length - 1;
+    return groupOf(index);
+  }
+
+  function setActive(indexes: number[]) {
+    if (indexes.join() === activeIndexes.join()) return;
+    activeIndexes = indexes;
+
+    tocLinks.forEach((link) => {
+      const isActive = indexes.includes(Number(link.dataset.index));
+      link.classList.toggle("is-active", isActive);
+      if (isActive) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+
+    moveIndicator();
+    if (currentLabel) {
+      currentLabel.textContent = indexes.map((i) => headings[i]?.textContent ?? "").join(" · ");
+    }
+  }
+
+  // A barra cobre do primeiro ao último item ativo
+  function moveIndicator() {
+    const first = sidebarLinks[activeIndexes[0]];
+    const last = sidebarLinks[activeIndexes[activeIndexes.length - 1]];
+    if (!indicator || !first || !last) return;
+    indicator.style.setProperty("--indicator-y", `${first.offsetTop}px`);
+    indicator.style.setProperty("--indicator-height", `${last.offsetTop + last.offsetHeight - first.offsetTop}px`);
+  }
+
+  // Atualiza no máximo uma vez por quadro durante a rolagem
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      if (performance.now() < lockedUntil) return;
+      setActive(findActive());
+    });
+  }
+
+  // ---------- Barra compacta (tablet/phone) ----------
+  function setPanel(open: boolean) {
+    if (!barButton || !barPanel) return;
+    barButton.setAttribute("aria-expanded", String(open));
+    barPanel.hidden = !open;
+  }
+
+  barButton?.addEventListener("click", () => {
+    setPanel(barButton.getAttribute("aria-expanded") !== "true");
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && barButton?.getAttribute("aria-expanded") === "true") {
+      setPanel(false);
+      barButton.focus();
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (bar && !bar.contains(event.target as Node)) setPanel(false);
+  });
+
+  // ---------- Clique num item: rolagem suave até a seção ----------
+  tocLinks.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const index = Number(link.dataset.index);
+      const target = headings[index];
+      if (!target) return;
+      event.preventDefault();
+
+      setPanel(false);
+      setActive(groupOf(index));
+      // Trava o destaque no item clicado até a rolagem terminar
+      lockedUntil = performance.now() + (reduceMotion.matches ? 0 : 1000);
+
+      target.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
+      history.replaceState(null, "", `#${target.id}`);
+
+      // Leva o foco do teclado para a seção, sem rolar de novo
+      target.setAttribute("tabindex", "-1");
+      target.focus({ preventScroll: true });
+    });
+  });
+
+  // Fim da rolagem: libera a trava e confere a posição
+  window.addEventListener("scrollend", () => {
+    lockedUntil = 0;
+    setActive(findActive());
+  });
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", () => {
+    moveIndicator();
+    onScroll();
+  });
+
+  // As fontes mudam a altura dos itens: reposiciona a barra quando carregarem
+  document.fonts?.ready.then(moveIndicator);
+  setActive(findActive());
+</script>

@@ -108,6 +108,13 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
 }
 
+.text-title {
+  font-family: var(--font-serif);
+  font-size: var(--text-title-size);
+  font-weight: var(--weight-regular);
+  line-height: 1.15;
+}
+
 .text-heading-xs,
 .text-heading-sm,
 .text-heading-md,

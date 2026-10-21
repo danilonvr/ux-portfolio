@@ -1,0 +1,55 @@
+---
+/*
+ * CsdColumn — uma coluna da matriz CSD. `tone` define a força da linha do topo.
+ */
+interface Props {
+  title: string;
+  tone?: "strong" | "medium" | "soft";
+}
+
+const { title, tone = "strong" } = Astro.props;
+---
+
+<div class:list={["csd-column", `tone-${tone}`]}>
+  <h3 class="text-heading-sm column-title">{title}</h3>
+  <div class="text-small column-body"><slot /></div>
+</div>
+
+<style>
+  .csd-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    padding-top: var(--space-12);
+    border-top: 2px solid var(--color-text);
+  }
+
+  .tone-medium {
+    border-top-color: var(--color-text-60);
+  }
+
+  .tone-soft {
+    border-top-color: var(--color-border);
+  }
+
+  .column-title {
+    color: var(--color-text);
+  }
+
+  .column-body {
+    color: var(--color-text-80);
+  }
+
+  .column-body :global(ul) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .column-body :global(p) {
+    margin: 0;
+  }
+</style>

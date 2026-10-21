@@ -1,19 +1,141 @@
 ---
 /*
- * Página de case — TEMPORÁRIA.
- * O template novo será desenhado depois. Conteúdo guardado em /content-archive/cases.
- * As URLs são as mesmas do Framer para não quebrar links já compartilhados.
+ * Página de case (Direção B): abertura + sumário lateral + conteúdo do .mdx.
+ * Cada arquivo em src/content/cases/ vira uma página em /project/<nome-do-arquivo>.
+ * Cases ainda não migrados (df-no-ponto) continuam como esboço temporário.
  */
+import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageStub from "../../components/PageStub.astro";
+import CaseHero from "../../components/case/CaseHero.astro";
+import CaseToc from "../../components/case/CaseToc.astro";
 
-export function getStaticPaths() {
-  return [{ params: { slug: "atraqui" } }, { params: { slug: "df-no-ponto" } }];
+export async function getStaticPaths() {
+  const cases = await getCollection("cases");
+  const migrated = cases.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+  // Ainda sem .mdx: mantém a URL do Framer funcionando
+  const pending = [{ params: { slug: "df-no-ponto" }, props: { entry: undefined } }];
+  return [...migrated, ...pending];
 }
 
-const { slug } = Astro.params;
+const { entry } = Astro.props;
+const rendered = entry ? await render(entry) : undefined;
+const sections = rendered?.headings.filter((h) => h.depth === 2) ?? [];
 ---
 
-<BaseLayout>
-  <PageStub name={`Case: ${slug}`} />
-</BaseLayout>
+{entry && rendered ? (
+  <BaseLayout title={`${entry.data.title} — Danilo Valois`} description={entry.data.subtitle}>
+    <CaseHero {...entry.data} />
+
+    <section class="case-body">
+      <div class="case-layout container">
+        <CaseToc items={sections} />
+        <article class="case-content">
+          <rendered.Content />
+        </article>
+      </div>
+    </section>
+  </BaseLayout>
+) : (
+  <BaseLayout>
+    <PageStub name={`Case: ${Astro.params.slug}`} />
+  </BaseLayout>
+)}
+
+<style>
+  .case-body {
+    padding: var(--section-pad-y) var(--page-gutter);
+  }
+
+  .case-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-100);
+  }
+
+  .case-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  @media (max-width: 1199.98px) {
+    .case-layout {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-40);
+    }
+  }
+
+  /* ---------- Estilo do texto vindo do .mdx ---------- */
+  .case-content > :global(:first-child),
+  .case-content > :global(:first-child) :global(h2) {
+    margin-top: 0;
+  }
+
+  .case-content :global(h2) {
+    margin: var(--space-80) 0 var(--space-16);
+    font-family: var(--font-serif);
+    font-size: var(--text-heading-lg-size);
+    font-weight: var(--weight-medium);
+    line-height: 1.2;
+    color: var(--color-text);
+    /* Para o título não ficar atrás do header fixo ao chegar pela âncora */
+    scroll-margin-top: calc(var(--header-height) + var(--space-24));
+  }
+
+  /* Abaixo de 1200px a barra do sumário também fica fixa: desconta a altura dela */
+  @media (max-width: 1199.98px) {
+    .case-content :global(h2) {
+      scroll-margin-top: calc(var(--header-height) + 48px + var(--space-24));
+    }
+  }
+
+  .case-content :global(h2:focus) {
+    outline: none;
+  }
+
+  .case-content :global(h3) {
+    margin: var(--space-40) 0 var(--space-12);
+    font-family: var(--font-serif);
+    font-size: var(--text-heading-item-size);
+    font-weight: var(--weight-medium);
+    line-height: 1.2;
+    color: var(--color-text);
+  }
+
+  .case-content :global(p) {
+    margin: 0 0 var(--space-16);
+    color: var(--color-text-80);
+  }
+
+  .case-content :global(strong) {
+    color: var(--color-text);
+    font-weight: var(--weight-medium);
+  }
+
+  /* Lista numerada do markdown (1. 2. 3.) vira lista com divisórias */
+  .case-content :global(ol) {
+    margin: var(--space-16) 0 var(--space-24);
+    padding: 0;
+    list-style: none;
+    counter-reset: item;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .case-content :global(ol > li) {
+    display: flex;
+    gap: var(--space-20);
+    padding: var(--space-16) 0;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-80);
+    counter-increment: item;
+  }
+
+  .case-content :global(ol > li)::before {
+    content: counter(item, decimal-leading-zero);
+    flex-shrink: 0;
+    width: 24px;
+    font-family: var(--font-serif);
+    color: var(--color-text-60);
+  }
+</style>
