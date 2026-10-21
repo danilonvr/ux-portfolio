@@ -38,7 +38,7 @@ content-archive/        ← conteúdo extraído do Framer, guardado para uso fut
 - [x] Header (desktop, tablet, phone + menu mobile)
 - [x] Footer (com relógio ao vivo)
 - [x] Home (capas dos projetos ainda como placeholder)
-- [ ] About
+- [x] About (fotos e logos ainda como placeholder)
 - [ ] Template de case (será redesenhado)
 
 **Fase 2 — evolução:** animações e interações novas, depois da paridade aprovada.

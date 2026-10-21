@@ -1,0 +1,97 @@
+---
+/*
+ * ExperienceCard — cargo, empresa, período e descrição.
+ * desktop/tablet: cargo à esquerda, empresa e período alinhados à direita
+ * phone: tudo empilhado à esquerda
+ * Sem hover (igual ao Framer).
+ *
+ * Spec: DESIGN-SYSTEM.md → Componentes → ExperienceCard
+ */
+import Icon from "./Icon.astro";
+
+interface Props {
+  role: string;
+  company: string;
+  period: string;
+  description: string;
+}
+
+const { role, company, period, description } = Astro.props;
+---
+
+<article class="experience-card with-border">
+  <div class="main-info">
+    <h3 class="text-heading-item role">{role}</h3>
+    <div class="details">
+      <p class="detail text-small">
+        <Icon name="buildings" size={16} />
+        <span class="visually-hidden">Company:</span>
+        <span>{company}</span>
+      </p>
+      <p class="detail text-small">
+        <Icon name="calendar" size={16} />
+        <span class="visually-hidden">Period:</span>
+        <span>{period}</span>
+      </p>
+    </div>
+  </div>
+  <p class="text-body description">{description}</p>
+</article>
+
+<style>
+  .experience-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-20);
+    padding: var(--space-20);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    --border-color: var(--color-border-subtle);
+  }
+
+  .main-info {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-10);
+  }
+
+  .role {
+    flex: 1;
+    color: var(--color-text);
+  }
+
+  .details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-5);
+  }
+
+  .detail {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    color: var(--color-text-60);
+    white-space: nowrap;
+  }
+
+  .description {
+    color: var(--color-text-80);
+  }
+
+  @media (max-width: 809.98px) {
+    .main-info {
+      flex-direction: column;
+    }
+
+    .role,
+    .details {
+      flex: none;
+    }
+
+    .details {
+      align-items: flex-start;
+    }
+  }
+</style>

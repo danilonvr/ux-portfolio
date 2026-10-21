@@ -1,0 +1,102 @@
+---
+/*
+ * StackItem — ferramenta da stack: logo, nome e categoria, com link externo.
+ * Hover: aparece o fundo --color-surface e uma seta de 16px ao lado do nome.
+ *
+ * Spec: DESIGN-SYSTEM.md → Componentes → StackItem
+ */
+import Icon from "./Icon.astro";
+import Placeholder from "./Placeholder.astro";
+
+interface Props {
+  name: string;
+  category: string;
+  href: string;
+}
+
+const { name, category, href } = Astro.props;
+---
+
+<a class="stack-item with-border" href={href} target="_blank" rel="noopener noreferrer">
+  <!-- Logo: placeholder até a imagem entrar. Arquivos originais em src/data/about.ts -->
+  <span class="logo"><Placeholder fill /></span>
+  <span class="details">
+    <span class="title-row">
+      <span class="text-heading-sm name">{name}</span>
+      <span class="arrow" aria-hidden="true"><Icon name="arrow-up-right" size={16} /></span>
+    </span>
+    <span class="text-small category">{category}</span>
+  </span>
+</a>
+
+<style>
+  .stack-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-10);
+    padding: var(--space-10);
+    border-radius: var(--radius-md);
+    transition: background-color var(--duration-base) var(--ease-standard);
+    --border-color: var(--color-border-faint);
+  }
+
+  .stack-item:hover {
+    background: var(--color-surface);
+  }
+
+  .logo {
+    display: block;
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+  }
+
+  .details {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-10);
+  }
+
+  .name {
+    flex: 1;
+    color: var(--color-text);
+  }
+
+  /* No Framer a seta fica com 1px (invisível) e cresce para 16px no hover */
+  .arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    color: var(--color-text);
+    transition:
+      width var(--duration-base) var(--ease-out),
+      height var(--duration-base) var(--ease-out);
+  }
+
+  .arrow :global(svg) {
+    flex-shrink: 0;
+  }
+
+  .stack-item:hover .arrow,
+  .stack-item:focus-visible .arrow {
+    width: 16px;
+    height: 16px;
+  }
+
+  .category {
+    color: var(--color-text-80);
+  }
+</style>

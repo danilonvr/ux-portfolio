@@ -1,0 +1,67 @@
+---
+/*
+ * StackSection — título, subtítulo e grade de ferramentas.
+ * Colunas: 3 (desktop) · 2 (tablet) · 1 (phone) · gap 20px.
+ */
+import StackItem from "../StackItem.astro";
+import { stack } from "../../data/about";
+---
+
+<section class="stack">
+  <div class="inner container">
+    <div class="heading">
+      <h2 class="text-heading-lg title">{stack.title}</h2>
+      <p class="text-body subtitle">{stack.subtitle}</p>
+    </div>
+    <div class="grid">
+      {stack.items.map((item) => (
+        <StackItem name={item.name} category={item.category} href={item.href} />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .stack {
+    padding: var(--section-pad-y) var(--page-gutter);
+  }
+
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-50);
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .title {
+    color: var(--color-text);
+  }
+
+  .subtitle {
+    max-width: 550px;
+    color: var(--color-text-80);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-20);
+  }
+
+  @media (max-width: 1199.98px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 809.98px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,60 @@
+---
+/*
+ * Breadcrumbs — trilha de navegação ("Home / About").
+ * Links em --color-text-80 (hover: destaque + sublinhado); página atual em --color-text-60.
+ *
+ * Spec: DESIGN-SYSTEM.md → Componentes → Breadcrumbs
+ */
+interface Props {
+  items: { label: string; href?: string }[]; // o último item é a página atual (sem href)
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumbs text-body" aria-label="Breadcrumb">
+  <ol>
+    {items.map((item, i) => (
+      <li>
+        {i > 0 && <span class="separator" aria-hidden="true">/</span>}
+        {item.href ? (
+          <a class="crumb-link" href={item.href}>{item.label}</a>
+        ) : (
+          <span class="current" aria-current="page">{item.label}</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  ol {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  .separator,
+  .crumb-link {
+    color: var(--color-text-80);
+  }
+
+  .crumb-link {
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
+
+  .crumb-link:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+
+  .current {
+    color: var(--color-text-60);
+  }
+</style>

@@ -9,9 +9,10 @@ import Icon from "./Icon.astro";
 interface Props {
   href: string;
   external?: boolean; // abre em nova aba
+  icon?: boolean;     // seta à direita (padrão: sim). "View my Resume" no About não tem.
 }
 
-const { href, external = false } = Astro.props;
+const { href, external = false, icon = true } = Astro.props;
 ---
 
 <a
@@ -21,7 +22,7 @@ const { href, external = false } = Astro.props;
   rel={external ? "noopener noreferrer" : undefined}
 >
   <span><slot /></span>
-  <Icon name="arrow-up-right" size={14} />
+  {icon && <Icon name="arrow-up-right" size={14} />}
 </a>
 
 <style>

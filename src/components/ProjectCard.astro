@@ -19,7 +19,7 @@ interface Props {
 const { href, title, description, category, year } = Astro.props;
 ---
 
-<a class="project-card" href={href}>
+<a class="project-card with-border" href={href}>
   <div class="media">
     <!-- Placeholder até a capa entrar. URLs originais em src/data/home.ts -->
     <Placeholder width={590} height={443} class="media-inner" />
@@ -45,6 +45,7 @@ const { href, title, description, category, year } = Astro.props;
     gap: var(--space-10);
     overflow: hidden;
     background: var(--color-surface);
+    --border-color: var(--color-border-subtle);
   }
 
   .media {

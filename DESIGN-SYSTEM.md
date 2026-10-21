@@ -43,7 +43,9 @@ O CSS é escrito **desktop primeiro**: o valor padrão é o do desktop e as medi
 | `--color-text-muted` | `#9FA0A3`                 | Metadados ("Brasília, Brazil"), ícone menu  |
 | `--color-on-dark`    | `#F6F6F6`                 | Texto sobre fundo escuro                    |
 | `--color-accent`     | `#00AE9D`                 | Estado de hover de links                    |
-| `--color-border`     | `#050505` a 10%           | Linhas divisórias; placeholders de mídia    |
+| `--color-border`     | `#050505` a 10%           | Linhas divisórias, topo do footer; placeholders de mídia |
+| `--color-border-subtle` | `#050505` a 5%         | Contorno de cards (projeto, experiência)    |
+| `--color-border-faint`  | `#050505` a 3%         | Contorno dos itens da stack                 |
 | `--color-glass`      | `#FFFFFF` a 50%           | Pílulas translúcidas (nav, logo no desktop) |
 | `--color-surface`    | `#050505` a 3%            | Fundo de cards e botões de ícone            |
 
@@ -70,9 +72,11 @@ O CSS é escrito **desktop primeiro**: o valor padrão é o do desktop e as medi
 | `.text-heading-lg`   | serif   | 500  | 26      | 24     | 22    | 1.2         | Título de seção ("Projects")        |
 | `.text-heading-card` | serif   | 500  | 24      | 22     | 20    | 1.2         | Título do card de projeto           |
 | `.text-heading-md`   | serif   | 500  | 22      | 21     | 20    | 1.2         | Links do footer                     |
+| `.text-heading-item` | serif   | 500  | 20      | 19     | 18    | 1.2         | Cargo no card de experiência        |
 | `.text-heading-sm`   | serif   | 500  | 18      | 17     | 16    | 1.2         | Rótulos serifados, "Hi, I'm Danilo!"|
 | `.text-heading-xs`   | serif   | 500  | 14      | 14     | 14    | 1.2         | Nome no logo                        |
 | `.text-body`         | sans    | 400  | 16      | 16     | 16    | 1.4         | Corpo de texto                      |
+| `.text-lead`         | sans    | 400  | 18      | 18     | 18    | 1.4         | Parágrafos de destaque (About)      |
 | `.text-small`        | sans    | 400  | 14      | 14     | 14    | 1.2         | Rótulos, cargos, metadados do card  |
 | `.text-nav`          | sans    | 500  | 13      | 13     | 13    | 1.2         | Itens da nav · tracking 0.03em      |
 | `.text-label`        | sans    | 500  | 12      | 12     | 12    | 1.1         | Botões e links em caixa alta        |
@@ -107,10 +111,18 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 |------------------|--------------|---------------------------------------|
 | `--radius-pill`  | 50px         | Botões, itens de nav, logo            |
 | `--radius-round` | 100px        | Container da nav, avatar              |
+| `--radius-lg`    | 10px         | Fotos                                 |
+| `--radius-md`    | 8px          | Cards de experiência, itens da stack  |
+| `--radius-sm`    | 4px          | Logos da stack                        |
 | `--blur-glass`   | `blur(10px)` | Fundo das pílulas translúcidas        |
 | `--avatar-size`  | 34px         | Foto do logo                          |
 
-**Ícones:** Phosphor, estilo *regular* (os mesmos do Framer). Componente `Icon.astro`. Disponíveis: `arrow-up-right`, `linkedin`, `x`. Tamanhos usados: 12px (links de texto), 14px (botões), 24px (redes sociais).
+**Contornos:** o Framer desenha as bordas por cima do elemento (`::after`), sem alterar o tamanho. Aqui isso é a classe utilitária `.with-border` (`global.css`): adicione a classe e defina `--border-color` no componente. O raio acompanha o do elemento.
+
+**Ícones:** Phosphor (os mesmos do Framer). Componente `Icon.astro`.
+- Estilo *regular*: `arrow-up-right`, `linkedin`, `x`.
+- Estilo *light*: `buildings`, `calendar` (card de experiência).
+- Tamanhos usados: 12px (links de texto), 14px (botões), 16px (experiência, stack), 24px (redes sociais).
 
 ---
 
@@ -138,6 +150,7 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 - Pílula `--color-text`, texto `.text-label` em `--color-on-dark`, seta 14px.
 - Padding 8px 16px, gap 5px, altura 36px.
 - **Hover:** nenhum (igual ao Framer).
+- Prop `icon={false}` remove a seta (usado em "View my Resume", no About).
 - Prop `external` abre em nova aba com `rel="noopener noreferrer"`.
 - Usado em: "Get in Touch" (header), "Resume" (footer).
 
@@ -170,12 +183,14 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 - **CTA:** "Lets talk?" (`.text-heading-sm`, `--color-text-60`) + frase (`.text-heading-cta`) + Button "Resume" e ArrowLink "Contact Me".
 - **Colunas:** título `.text-heading-sm` em `--color-text-60`; links `.text-heading-md` em `--color-text-80`, sem quebra de linha.
   - Hover de link: `--color-accent` + sublinhado.
-- **Relógio:** hora de Brasília (`America/Sao_Paulo`), formato "7:04 PM", atualiza a cada minuto.
+- **Relógio:** formato "7:04 PM", atualiza a cada minuto. Mostra a hora **local de quem visita** (igual ao Framer). O fuso é configurável em `src/data/site.ts`.
+- **Link da página atual:** fica em `--color-text` (ex.: "About" quando se está no About).
 - **Layout:**
   - desktop: CTA 400px + colunas 3 × 213px lado a lado (gap 100px).
   - tablet: CTA em cima, colunas em 3 partes iguais (gap 50px entre blocos).
   - phone: CTA em cima, colunas em grade de 2.
-- Linha final 1px `--color-border`.
+- Linha de 1px `--color-border` no topo do footer, de ponta a ponta da tela.
+- Linha final 1px `--color-border`, na largura do container.
 
 ### RevealTitle
 `src/components/RevealTitle.astro` — título que aparece palavra por palavra ao carregar.
@@ -211,7 +226,7 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 ### ProjectCard
 `src/components/ProjectCard.astro` — card da grade de projetos.
 
-- Fundo `--color-surface`, sem raio.
+- Fundo `--color-surface`, sem raio, contorno 1px `--color-border-subtle`.
 - Imagem na proporção 590:443; depois, bloco com padding 20px e gap 10px.
   - Título: `.text-heading-card`.
   - Descrição: `.text-body` em `--color-text-80`. Mostra no máximo 44px (≈2 linhas) e o resto é **cortado sem reticências**, igual ao Framer.
@@ -222,8 +237,31 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 ### Divider
 `src/components/Divider.astro` — linha de 1px `--color-border` alinhada ao container, com 10px de respiro em cima e embaixo.
 
+### Breadcrumbs
+`src/components/Breadcrumbs.astro` — trilha "Home / About".
+
+- `.text-body`; links e "/" em `--color-text-80`, página atual em `--color-text-60`; gap 5px.
+- **Hover do link:** `--color-accent` + sublinhado.
+
+### ExperienceCard
+`src/components/ExperienceCard.astro` — cargo, empresa, período e descrição.
+
+- Padding 20px, gap 20px, raio `--radius-md`, fundo `--color-surface`, contorno `--color-border-subtle`.
+- Cargo: `.text-heading-item`. Empresa e período: `.text-small` em `--color-text-60` com ícones *light* de 16px.
+- desktop/tablet: cargo à esquerda, empresa e período alinhados à direita. phone: tudo empilhado à esquerda.
+- **Hover:** nenhum.
+
+### StackItem
+`src/components/StackItem.astro` — ferramenta com logo (50px, `--radius-sm`), nome (`.text-heading-sm`) e categoria (`.text-small` em `--color-text-80`).
+
+- Padding 10px, gap 10px, raio `--radius-md`, contorno `--color-border-faint`.
+- **Hover:** fundo `--color-surface` e seta de 16px que cresce ao lado do nome (`--duration-base`).
+- Grade: 3 colunas (desktop), 2 (tablet), 1 (phone), gap 20px.
+
 ### Placeholder
-`src/components/Placeholder.astro` — ocupa o lugar de imagens e vídeos, mantendo a proporção. Fundo `--color-border`. Opção `round` para o avatar.
+`src/components/Placeholder.astro` — ocupa o lugar de imagens e vídeos, mantendo a proporção. Fundo `--color-border`.
+- `round`: círculo (avatar).
+- `fill`: ocupa 100% do pai, para fotos com altura fixa definida pelo layout.
 
 ### Analytics
 `src/components/Analytics.astro` — **desligado**. Espaço reservado no `<head>` para Google Analytics e Hotjar. Instruções dentro do arquivo.
@@ -236,6 +274,8 @@ Registro do que foi decidido e por quê. Mais recente em cima.
 
 | Data       | Decisão | Motivo |
 |------------|---------|--------|
+| 2026-10-21 | Contornos de 1px desenhados por cima do elemento (`.with-border`), em cards de projeto, experiência, itens da stack e topo do footer. | O Framer usa `::after`; eu não tinha detectado nas etapas de header/footer e Home. Corrigido. |
+| 2026-10-21 | Relógio passa a mostrar a hora local do visitante (antes: Brasília fixo). | Comportamento real do Framer, verificado mudando o fuso do navegador. |
 | 2026-10-21 | O que no Framer parecia um "ticker" é um slideshow: troca de item a cada 4s, não rolagem contínua. Recriado como RoleSlideshow. | Comportamento medido no site. |
 | 2026-10-21 | "Hi, I'm Danilo!" usa `<p>` (no Framer era `<h6>`). | Não é título de seção; sem efeito visual. |
 | 2026-10-21 | Copy copiada exatamente do Framer, inclusive contradições ("two years" × "three years", empregador antigo). | Revisão de copy será feita depois, separada da paridade. |
@@ -253,4 +293,7 @@ Registro do que foi decidido e por quê. Mais recente em cima.
 - [ ] "Get in Touch" e "Contact Me" levam ao LinkedIn, não ao email.
 - [ ] Contraste baixo de `--color-text-muted` (ver seção Cor).
 - [ ] Ao clicar em "Work", a página rola até o título "Projects", mas ele fica escondido atrás do header fixo. Correção sugerida: `scroll-margin-top: var(--header-height)` no `#projects`.
+- [ ] O relógio do footer diz "Brazil", mas mostra a hora de quem visita. Para mostrar Brasília: `timeZone: "America/Sao_Paulo"` em `src/data/site.ts`.
+- [ ] O link do Jira (Stack) carrega parâmetros de rastreamento de anúncio (`gclid` etc.). Sugestão: `https://www.atlassian.com/software/jira`.
+- [ ] Nos cards de experiência, os itens da descrição são separados por espaço duplo num único parágrafo; na tela viram texto corrido. Uma lista com marcadores leria melhor.
 - [ ] A descrição do card é cortada no meio da frase, sem reticências, quando passa de 2 linhas (visível no tablet e no phone).

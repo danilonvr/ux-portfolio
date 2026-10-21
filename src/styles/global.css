@@ -73,6 +73,21 @@ h1, h2, h3, h4, h5, h6 {
   margin-inline: auto;
 }
 
+/* Contorno de 1px desenhado por cima do elemento (como o Framer faz).
+ * Não altera o tamanho do elemento e fica acima de imagens internas.
+ * Cor via --border-color; o raio acompanha o do elemento. */
+.with-border {
+  position: relative;
+}
+.with-border::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--border-color, var(--color-border));
+  border-radius: inherit;
+  pointer-events: none;
+}
+
 /* Texto só para leitores de tela */
 .visually-hidden {
   position: absolute;
@@ -96,6 +111,7 @@ h1, h2, h3, h4, h5, h6 {
 .text-heading-xs,
 .text-heading-sm,
 .text-heading-md,
+.text-heading-item,
 .text-heading-card,
 .text-heading-lg,
 .text-heading-cta {
@@ -106,6 +122,7 @@ h1, h2, h3, h4, h5, h6 {
 .text-heading-xs   { font-size: var(--text-heading-xs-size); }
 .text-heading-sm   { font-size: var(--text-heading-sm-size); }
 .text-heading-md   { font-size: var(--text-heading-md-size); }
+.text-heading-item { font-size: var(--text-heading-item-size); }
 .text-heading-card { font-size: var(--text-heading-card-size); }
 .text-heading-lg   { font-size: var(--text-heading-lg-size); }
 .text-heading-cta  { font-size: var(--text-heading-cta-size); }
@@ -121,6 +138,13 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans);
   font-size: var(--text-body-size);
   line-height: var(--text-body-line);
+  font-weight: var(--weight-regular);
+}
+
+.text-lead {
+  font-family: var(--font-sans);
+  font-size: var(--text-lead-size);
+  line-height: 1.4;
   font-weight: var(--weight-regular);
 }
 

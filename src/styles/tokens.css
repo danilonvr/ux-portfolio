@@ -22,7 +22,9 @@
   --color-text-muted: #9fa0a3;            /* metadados (ex.: "Brasília, Brazil") */
   --color-on-dark: #f6f6f6;               /* texto sobre fundo escuro */
   --color-accent: #00ae9d;                /* hover de links */
-  --color-border: rgb(5 5 5 / 0.1);       /* linhas divisórias */
+  --color-border: rgb(5 5 5 / 0.1);       /* linhas divisórias, topo do footer */
+  --color-border-subtle: rgb(5 5 5 / 0.05); /* contorno de cards (projeto, experiência) */
+  --color-border-faint: rgb(5 5 5 / 0.03);  /* contorno dos itens da stack */
   --color-glass: rgb(255 255 255 / 0.5);  /* pílulas translúcidas (nav, logo) */
   --color-surface: rgb(5 5 5 / 0.03);     /* fundo de cards e botões de ícone */
 
@@ -38,12 +40,14 @@
   --text-heading-xs-size: 14px;    /* nome no logo */
   --text-heading-sm-size: 18px;    /* rótulos serifados: "Lets talk?", "Index", "Hi, I'm Danilo!" */
   --text-heading-md-size: 22px;    /* links do footer */
+  --text-heading-item-size: 20px;  /* título de item de lista (cargo na experiência) */
   --text-heading-card-size: 24px;  /* título do card de projeto */
   --text-heading-lg-size: 26px;    /* título de seção ("Projects") */
   --text-heading-cta-size: 28px;   /* frase de CTA do footer */
 
   --text-body-size: 16px;          /* corpo de texto */
   --text-body-line: 1.4;
+  --text-lead-size: 18px;          /* parágrafos de destaque (About) — igual em todos os breakpoints */
   --text-nav-size: 13px;           /* itens da nav */
   --text-nav-tracking: 0.03em;     /* = 0.39px em 13px */
   --text-small-size: 14px;         /* rótulos e metadados em Inter ("Let's talk", "2025") */
@@ -86,6 +90,9 @@
   --hero-gap: var(--space-100);          /* entre o título do hero e o bloco de perfil */
 
   /* ---------- Raio ---------- */
+  --radius-sm: 4px;        /* logos da stack */
+  --radius-md: 8px;        /* cards de experiência e itens da stack */
+  --radius-lg: 10px;       /* fotos */
   --radius-pill: 50px;     /* botões e itens de nav */
   --radius-round: 100px;   /* container da nav, avatar */
 
@@ -114,6 +121,7 @@
     --text-display-size: 52px;
     --text-heading-sm-size: 17px;
     --text-heading-md-size: 21px;
+    --text-heading-item-size: 19px;
     --text-heading-card-size: 22px;
     --text-heading-lg-size: 24px;
     --text-heading-cta-size: 26px;
@@ -135,6 +143,7 @@
     --text-display-size: 38px;
     --text-heading-sm-size: 16px;
     --text-heading-md-size: 20px;
+    --text-heading-item-size: 18px;
     --text-heading-card-size: 20px;
     --text-heading-lg-size: 22px;
     --text-heading-cta-size: 24px;

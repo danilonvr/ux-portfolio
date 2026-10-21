@@ -65,8 +65,13 @@ export const footerCta = {
     "Wanna chat about design, innovation or why simplicity is harder than it looks?",
 };
 
-/* Fuso do relógio do footer */
+/* Relógio do footer
+ * Igual ao Framer: mostra a hora LOCAL de quem visita, não a de Brasília
+ * (testado: com o navegador no fuso de Tóquio, o Framer mostra a hora de Tóquio).
+ * Como o rótulo diz "Brazil", o mais provável é que a intenção fosse Brasília.
+ * Para isso, troque timeZone para "America/Sao_Paulo".
+ */
 export const clock = {
-  timeZone: "America/Sao_Paulo",
+  timeZone: undefined as string | undefined, // undefined = fuso do visitante
   locale: "en-US",
 };

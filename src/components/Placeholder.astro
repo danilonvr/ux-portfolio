@@ -1,23 +1,26 @@
 ---
 /*
  * Placeholder — ocupa o lugar de imagens e vídeos enquanto os arquivos reais não entram.
- * Mantém a proporção original para o layout não "pular" quando a mídia for trocada.
- * As URLs originais de cada mídia estão em /content-archive.
+ * Por padrão mantém a proporção original (width/height) para o layout não "pular"
+ * quando a mídia for trocada. Com `fill`, ocupa 100% do elemento pai (para fotos com
+ * altura fixa definida pelo layout).
+ * As URLs originais de cada mídia estão em /content-archive e nos arquivos de src/data.
  */
 interface Props {
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   label?: string;
   round?: boolean; // círculo (avatar)
+  fill?: boolean;  // ocupa todo o pai, ignorando a proporção
   class?: string;
 }
 
-const { width, height, label = "", round = false, class: className } = Astro.props;
+const { width = 1, height = 1, label = "", round = false, fill = false, class: className } = Astro.props;
 ---
 
 <div
-  class:list={["placeholder", { round }, className]}
-  style={`aspect-ratio: ${width} / ${height};`}
+  class:list={["placeholder", { round, fill }, className]}
+  style={fill ? undefined : `aspect-ratio: ${width} / ${height};`}
   role={label ? "img" : undefined}
   aria-label={label || undefined}
   aria-hidden={label ? undefined : "true"}
@@ -28,6 +31,9 @@ const { width, height, label = "", round = false, class: className } = Astro.pro
   .placeholder {
     width: 100%;
     background: var(--color-border);
+  }
+  .fill {
+    height: 100%;
   }
   .round {
     border-radius: var(--radius-round);

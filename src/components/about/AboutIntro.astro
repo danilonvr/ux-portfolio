@@ -1,0 +1,150 @@
+---
+/*
+ * AboutIntro — trilha + texto de abertura + galeria (3 fotos e 2 parágrafos).
+ *
+ * Galeria (igual ao Framer):
+ *   desktop: foto principal à esquerda | à direita: [foto + texto] em linha, e foto larga embaixo
+ *   tablet : mesmas 2 colunas, mas à direita o texto vem antes da foto, em coluna
+ *   phone  : tudo em uma coluna
+ * As fotos têm altura fixa por breakpoint (medida no Framer); a principal acompanha a coluna da direita.
+ */
+import Breadcrumbs from "../Breadcrumbs.astro";
+import Placeholder from "../Placeholder.astro";
+import { intro } from "../../data/about";
+---
+
+<section class="about-intro">
+  <div class="inner container">
+    <div class="heading">
+      <Breadcrumbs items={[{ label: intro.breadcrumb.home, href: "/" }, { label: intro.breadcrumb.current }]} />
+      <h1 class="text-heading-cta title">{intro.title}</h1>
+    </div>
+
+    <div class="gallery">
+      <div class="photo photo--main"><Placeholder fill /></div>
+
+      <div class="side">
+        <div class="side-top">
+          <div class="photo photo--talk"><Placeholder fill /></div>
+          <div class="text">
+            {intro.paragraphs.map((paragraph) => (
+              <p class="text-lead">{paragraph}</p>
+            ))}
+          </div>
+        </div>
+        <div class="photo photo--book"><Placeholder fill /></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-intro {
+    padding: var(--section-pad-y) var(--page-gutter);
+
+    /* Alturas das fotos, medidas no Framer */
+    --photo-talk-height: 413px;
+    --photo-book-height: 375px;
+  }
+
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-50);
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-30);
+  }
+
+  .title {
+    color: var(--color-text);
+  }
+
+  /* ---------- Galeria ---------- */
+  .gallery {
+    display: flex;
+    gap: var(--space-20);
+  }
+
+  .photo {
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+  }
+
+  .photo--main {
+    flex: 1;
+  }
+
+  .side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-20);
+  }
+
+  .side-top {
+    display: flex;
+    gap: var(--space-20);
+  }
+
+  .photo--talk {
+    flex: 1;
+    height: var(--photo-talk-height);
+  }
+
+  .text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-20);
+    padding: var(--space-20) 0;
+    color: var(--color-text-80);
+  }
+
+  .photo--book {
+    height: var(--photo-book-height);
+  }
+
+  /* ---------- Tablet ---------- */
+  @media (max-width: 1199.98px) {
+    .about-intro {
+      --photo-talk-height: 252px;
+      --photo-book-height: 252px;
+    }
+
+    /* Texto antes da foto, empilhados */
+    .side-top {
+      flex-direction: column-reverse;
+    }
+
+    .photo--talk {
+      flex: none;
+    }
+
+    .text {
+      padding: 0;
+    }
+  }
+
+  /* ---------- Phone ---------- */
+  @media (max-width: 809.98px) {
+    .about-intro {
+      --photo-main-height: 287px;
+      --photo-talk-height: 191px;
+      --photo-book-height: 191px;
+    }
+
+    .gallery {
+      flex-direction: column;
+    }
+
+    .photo--main {
+      flex: none;
+      height: var(--photo-main-height);
+    }
+  }
+</style>

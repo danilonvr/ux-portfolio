@@ -1,8 +1,14 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PageStub from "../components/PageStub.astro";
+import AboutIntro from "../components/about/AboutIntro.astro";
+import ExperienceSection from "../components/about/ExperienceSection.astro";
+import Divider from "../components/Divider.astro";
+import StackSection from "../components/about/StackSection.astro";
 ---
 
 <BaseLayout>
-  <PageStub name="About" />
+  <AboutIntro />
+  <ExperienceSection />
+  <Divider />
+  <StackSection />
 </BaseLayout>

@@ -1,0 +1,70 @@
+---
+/*
+ * ExperienceSection — "My Experiences": título + lista de cards + botão do currículo.
+ * desktop: título (400px) à esquerda e lista (700px) à direita · tablet/phone: empilhados
+ */
+import ExperienceCard from "../ExperienceCard.astro";
+import Button from "../Button.astro";
+import { experience } from "../../data/about";
+import { links } from "../../data/site";
+---
+
+<section class="experience">
+  <div class="inner container">
+    <h2 class="text-heading-lg title">{experience.title}</h2>
+
+    <div class="main">
+      <div class="list">
+        {experience.items.map((item) => (
+          <ExperienceCard {...item} />
+        ))}
+      </div>
+      <div>
+        <Button href={links.resume} external icon={false}>{experience.resumeLabel}</Button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .experience {
+    padding: var(--section-pad-y) var(--page-gutter);
+  }
+
+  .inner {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-100);
+  }
+
+  .title {
+    width: 400px;
+    flex-shrink: 0;
+    color: var(--color-text);
+  }
+
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-50);
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-20);
+  }
+
+  @media (max-width: 1199.98px) {
+    .inner {
+      flex-direction: column;
+      gap: var(--space-50);
+    }
+
+    .title,
+    .main {
+      width: 100%;
+    }
+  }
+</style>
