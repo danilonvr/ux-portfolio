@@ -17,6 +17,9 @@ export const hero = {
   socialLabel: "Social Profiles:",
 };
 
+import atraquiCover from "../assets/cases/atraqui-cover.png";
+import dfNoPontoCover from "../assets/cases/df-no-ponto-cover.png";
+
 export const projectsSection = {
   // Antes "Projects": renomeado para casar com o item "Work" da navegação
   title: "Work",
@@ -32,8 +35,7 @@ export const projects = [
       "An application developed to automate ship queue management, reducing demurrage costs, and increasing the port’s flow",
     category: "Product Design",
     year: "2025",
-    // Capa original (para quando a mídia entrar):
-    // https://framerusercontent.com/images/axAb7JqHyG97t4ub9oq15gf9Qr4.png
+    cover: atraquiCover,
   },
   {
     slug: "df-no-ponto",
@@ -42,6 +44,6 @@ export const projects = [
       "A mobility app focused on real-time public transport information, enabling more predictable, informed, and efficient urban travel.",
     category: "Product Design",
     year: "2026",
-    // Capa original: https://framerusercontent.com/images/VlWWJd1o7SD7tJyDgdgw13aoY4.png
+    cover: dfNoPontoCover,
   },
 ];

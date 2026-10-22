@@ -13,7 +13,8 @@
  * Spec: DESIGN-SYSTEM.md → Componentes → Header
  */
 import Button from "./Button.astro";
-import Placeholder from "./Placeholder.astro";
+import { Image } from "astro:assets";
+import avatar from "../assets/avatar-danilo-valois.jpg";
 import { site, nav, links } from "../data/site";
 
 // Item ativo no carregamento: Home na Home, About no About, Work nas páginas de case.
@@ -31,8 +32,15 @@ const isActive = (href: string) => {
   <div class="inner container">
     <div class="bar">
       <a class="logo" href="/" aria-label={`${site.name} — Home`}>
-        <!-- Avatar: placeholder até a foto entrar -->
-        <span class="avatar"><Placeholder width={1} height={1} round /></span>
+        <!-- alt vazio: o link já se anuncia pelo aria-label (nome) -->
+        <Image
+          class="avatar"
+          src={avatar}
+          alt=""
+          widths={[34, 68, 102]}
+          sizes="34px"
+          loading="eager"
+        />
         <span class="logo-text">
           <span class="text-heading-xs logo-name">{site.name}</span>
           <span class="text-caption logo-location">{site.location}</span>
@@ -261,6 +269,8 @@ const isActive = (href: string) => {
     width: var(--avatar-size);
     height: var(--avatar-size);
     flex-shrink: 0;
+    border-radius: var(--radius-round);
+    object-fit: cover;
   }
 
   .logo-text {

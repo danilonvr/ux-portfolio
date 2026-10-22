@@ -325,6 +325,7 @@ Registro do que foi decidido e por quê. Mais recente em cima.
 | 2026-10-21 | Template de case será redesenhado; conteúdo guardado em `/content-archive/cases`. | Layout novo, conteúdo preservado. |
 | 2026-10-21 | Links externos ganham `rel="noopener noreferrer"`. | Segurança; sem efeito visual. |
 | 2026-10-21 | Títulos das colunas do footer usam `<h2>` (no Framer eram `<h6>`). | Hierarquia de títulos correta para leitores de tela; sem efeito visual. |
+| 2026-10-22 | Entram a foto do header, as capas dos cards da Home e o favicon "DV". Imagens em `src/assets/` (otimizadas pelo Astro); favicon em `public/`. | Primeiras mídias reais. A capa interna dos cases (`CaseHero`) continua placeholder. |
 
 ## Problemas herdados do Framer (mantidos de propósito na Fase 1)
 

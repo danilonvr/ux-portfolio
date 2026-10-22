@@ -16,6 +16,7 @@ import { projects, projectsSection } from "../../data/home";
       {projects.map((project) => (
         <ProjectCard
           href={`/project/${project.slug}`}
+          cover={project.cover}
           title={project.title}
           description={project.description}
           category={project.category}

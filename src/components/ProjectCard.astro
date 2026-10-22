@@ -6,23 +6,35 @@
  *
  * Spec: DESIGN-SYSTEM.md → Componentes → ProjectCard
  */
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
 import Placeholder from "./Placeholder.astro";
 
 interface Props {
   href: string;
+  cover?: ImageMetadata; // sem capa, mostra o placeholder
   title: string;
   description: string;
   category: string;
   year: string;
 }
 
-const { href, title, description, category, year } = Astro.props;
+const { href, cover, title, description, category, year } = Astro.props;
 ---
 
 <a class="project-card with-border" href={href}>
   <div class="media">
-    <!-- Placeholder até a capa entrar. URLs originais em src/data/home.ts -->
-    <Placeholder width={590} height={443} class="media-inner" />
+    {cover ? (
+      /* alt vazio: o título do card logo abaixo já identifica o projeto */
+      <Image
+        src={cover}
+        alt=""
+        class="media-inner cover"
+        sizes="(max-width: 809.98px) 100vw, 590px"
+      />
+    ) : (
+      <Placeholder width={590} height={443} class="media-inner" />
+    )}
   </div>
 
   <div class="details">
@@ -50,6 +62,14 @@ const { href, title, description, category, year } = Astro.props;
 
   .media {
     overflow: hidden;
+  }
+
+  .cover {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 590 / 443;
+    object-fit: cover;
   }
 
   .media :global(.media-inner) {
