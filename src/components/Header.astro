@@ -7,15 +7,22 @@
  *   tablet  (810–1199): igual ao desktop, mas o logo sem pílula
  *   phone   (<810): logo + botão "Menu"; o menu abre expandindo o header para baixo
  *
+ * Navegação (desktop/tablet): uma pílula única desliza até o item selecionado
+ * (mesmo comportamento de liumichelle.com). Detalhes no script logo abaixo da <nav>.
+ *
  * Spec: DESIGN-SYSTEM.md → Componentes → Header
  */
 import Button from "./Button.astro";
 import Placeholder from "./Placeholder.astro";
 import { site, nav, links } from "../data/site";
 
-// Item ativo = página atual. "Work" é uma âncora da Home, então nunca fica ativo (igual ao Framer).
+// Item ativo no carregamento: Home na Home, About no About, Work nas páginas de case.
+// Na Home, "Work" passa a ficar ativo quando a seção de projetos chega na tela (script abaixo).
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
-const isActive = (href: string) => href === path;
+const isActive = (href: string) => {
+  if (href === "/#work") return path.startsWith("/project/");
+  return href === path;
+};
 ---
 
 <div class="header-spacer" aria-hidden="true"></div>
@@ -32,17 +39,149 @@ const isActive = (href: string) => href === path;
         </span>
       </a>
 
-      <nav class="nav nav--bar" aria-label="Principal">
+      <nav class="nav nav--bar" aria-label="Principal" data-nav>
+        <span class="nav-pill" aria-hidden="true" data-nav-pill></span>
         {nav.map((item) => (
           <a
             class:list={["nav-item text-nav", { active: isActive(item.href) }]}
             href={item.href}
             aria-current={isActive(item.href) ? "page" : undefined}
+            data-nav-link
           >
             {item.label}
           </a>
         ))}
       </nav>
+      <script is:inline>
+        /*
+         * Pílula da navegação — roda aqui, antes da página aparecer, para não "piscar".
+         *
+         * 1. Coloca a pílula sob o item ativo.
+         * 2. Entre páginas: ao clicar num item, guarda onde a pílula estava. A página nova
+         *    nasce com a pílula nesse ponto e desliza até o item certo.
+         * 3. Na Home: "Work" acende quando a seção de projetos chega a ~25% da tela;
+         *    clicar em Home/Work rola suavemente em vez de recarregar a página.
+         */
+        (function () {
+          var nav = document.querySelector("[data-nav]");
+          var pill = nav && nav.querySelector("[data-nav-pill]");
+          if (!nav || !pill) return;
+          var links = Array.prototype.slice.call(nav.querySelectorAll("[data-nav-link]"));
+          var KEY = "nav-pill";
+          var isHome = location.pathname === "/" || location.pathname === "";
+          var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          var lockedUntil = 0;
+
+          function linkFor(href) {
+            return links.filter(function (a) { return a.getAttribute("href") === href; })[0];
+          }
+
+          function current() {
+            return links.filter(function (a) { return a.classList.contains("active"); })[0];
+          }
+
+          function place(link, animate) {
+            if (!link) return;
+            pill.classList.toggle("is-animated", !!animate);
+            pill.style.setProperty("--pill-x", link.offsetLeft + "px");
+            pill.style.setProperty("--pill-w", link.offsetWidth + "px");
+          }
+
+          function setActive(link, animate) {
+            if (!link || link === current()) return;
+            links.forEach(function (a) {
+              var on = a === link;
+              a.classList.toggle("active", on);
+              if (on) a.setAttribute("aria-current", "page");
+              else a.removeAttribute("aria-current");
+            });
+            place(link, animate);
+          }
+
+          // Na Home, chegando por "/#work": Work já começa ativo
+          if (isHome && location.hash === "#work") setActive(linkFor("/#work"), false);
+
+          // Posição inicial: onde a pílula estava na página anterior (se acabou de navegar pela nav)
+          var from = null;
+          try {
+            from = JSON.parse(sessionStorage.getItem(KEY) || "null");
+            sessionStorage.removeItem(KEY);
+          } catch (e) {}
+
+          var target = current();
+          if (from && Date.now() - from.t < 4000 && !reduceMotion) {
+            pill.style.setProperty("--pill-x", from.x + "px");
+            pill.style.setProperty("--pill-w", from.w + "px");
+            nav.classList.add("has-pill");
+            void pill.offsetWidth; // aplica a posição antiga antes de animar
+            requestAnimationFrame(function () { place(target, true); });
+          } else {
+            place(target, false);
+            nav.classList.add("has-pill");
+          }
+
+          // As fontes mudam a largura dos itens: reposiciona quando carregarem
+          if (document.fonts) document.fonts.ready.then(function () { place(current(), true); });
+          window.addEventListener("resize", function () { place(current(), false); });
+
+          // Ao clicar num item: guarda a posição atual (para a próxima página animar a partir dela)
+          links.forEach(function (link) {
+            link.addEventListener("click", function (event) {
+              var href = link.getAttribute("href");
+
+              // Na Home, Home e Work só rolam a página
+              if (isHome && (href === "/" || href === "/#work")) {
+                event.preventDefault();
+                setActive(link, true);
+                lockedUntil = performance.now() + (reduceMotion ? 0 : 1200);
+                var behavior = reduceMotion ? "auto" : "smooth";
+                if (href === "/") {
+                  window.scrollTo({ top: 0, behavior: behavior });
+                  history.replaceState(null, "", "/");
+                } else {
+                  var section = document.getElementById("work");
+                  if (section) section.scrollIntoView({ behavior: behavior, block: "start" });
+                  history.replaceState(null, "", "/#work");
+                }
+                return;
+              }
+
+              try {
+                sessionStorage.setItem(KEY, JSON.stringify({
+                  x: pill.offsetLeft + (parseFloat(pill.style.getPropertyValue("--pill-x")) || 0),
+                  w: parseFloat(pill.style.getPropertyValue("--pill-w")) || 0,
+                  t: Date.now()
+                }));
+              } catch (e) {}
+            });
+          });
+
+          // Na Home: Work acende quando a seção de projetos passa de ~25% da tela
+          if (isHome) {
+            var ticking = false;
+            var headerHeight = function () {
+              return parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-height")) || 0;
+            };
+            var spy = function () {
+              ticking = false;
+              if (performance.now() < lockedUntil) return;
+              var section = document.getElementById("work");
+              if (!section) return;
+              var reached = section.getBoundingClientRect().top <= headerHeight() + window.innerHeight * 0.25;
+              var link = linkFor(reached ? "/#work" : "/");
+              if (link !== current()) history.replaceState(null, "", reached ? "/#work" : "/");
+              setActive(link, true);
+            };
+            window.addEventListener("scroll", function () {
+              if (ticking) return;
+              ticking = true;
+              requestAnimationFrame(spy);
+            }, { passive: true });
+            window.addEventListener("scrollend", function () { lockedUntil = 0; spy(); });
+            document.addEventListener("DOMContentLoaded", spy);
+          }
+        })();
+      </script>
 
       <div class="action action--bar">
         <Button href={links.linkedin} external>Get in Touch</Button>
@@ -145,8 +284,7 @@ const isActive = (href: string) => href === path;
   }
 
   .nav--bar {
-    /* Nome usado na transição entre páginas (global.css → Transição entre páginas) */
-    view-transition-name: main-nav;
+    position: relative;
     padding: var(--space-4);
     border-radius: var(--radius-round);
     background: var(--color-glass);
@@ -155,27 +293,53 @@ const isActive = (href: string) => href === path;
   }
 
   .nav-item {
+    position: relative; /* fica acima da pílula */
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: var(--space-10) var(--space-16);
     border-radius: var(--radius-pill);
-    color: var(--color-text-secondary);
-    transition:
-      color var(--duration-fast) var(--ease-standard),
-      background-color var(--duration-slow) var(--ease-standard),
-      box-shadow var(--duration-slow) var(--ease-standard);
+    color: var(--color-text-tertiary);
+    transition: color var(--duration-fast) var(--ease-decelerate);
   }
 
-  .nav-item:hover {
-    color: var(--color-highlight);
-  }
-
-  /* Página atual: fundo claro + contorno de 1px (por dentro, sem mudar o tamanho) para dar elevação */
+  /* Hover só escurece o texto; a pílula não se move (igual à referência) */
+  .nav-item:hover,
   .nav-item.active {
+    color: var(--color-text-primary);
+  }
+
+  /* Pílula do item selecionado: fundo claro + contorno de 1px para dar elevação.
+     Uma só para a nav inteira; o script a posiciona e ela desliza entre os itens. */
+  .nav-pill {
+    position: absolute;
+    top: var(--space-4);
+    bottom: var(--space-4);
+    left: 0;
+    width: var(--pill-w, 0px);
+    transform: translateX(var(--pill-x, 0px));
+    border-radius: var(--radius-pill);
     background: var(--color-selected-bg);
     box-shadow: inset 0 0 0 1px var(--color-selected-border);
-    color: var(--color-text-primary);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .nav--bar.has-pill .nav-pill {
+    opacity: 1;
+  }
+
+  .nav-pill.is-animated {
+    transition:
+      transform var(--duration-base) var(--ease-decelerate),
+      width var(--duration-base) var(--ease-decelerate);
+  }
+
+  /* Sem JavaScript (ou no menu mobile): o próprio item recebe o fundo */
+  .nav--bar:not(.has-pill) .nav-item.active,
+  .nav--panel .nav-item.active {
+    background: var(--color-selected-bg);
+    box-shadow: inset 0 0 0 1px var(--color-selected-border);
   }
 
   /* ---------- Toggle do menu (só phone) ---------- */
@@ -295,6 +459,11 @@ const isActive = (href: string) => href === path;
 
   toggle?.addEventListener("click", () => {
     setOpen(header?.dataset.open !== "true");
+  });
+
+  // Escolher um item do menu fecha o menu (ex.: "Work" rola a Home até os projetos)
+  header?.querySelectorAll(".nav--panel a").forEach((link) => {
+    link.addEventListener("click", () => setOpen(false));
   });
 
   document.addEventListener("keydown", (event) => {

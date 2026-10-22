@@ -178,32 +178,6 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: var(--weight-regular);
 }
 
-/* ---------- Transição entre páginas ----------
- * Ao trocar de página (Home ↔ About ↔ case), só a navegação principal anima:
- * a pílula da página antiga se dilui enquanto a da nova aparece (fusão cruzada).
- * O resto da página troca na hora. Funciona em Chrome, Edge e Safari 18.2+;
- * no Firefox a troca é instantânea (sem quebrar nada).
- */
-@view-transition {
-  navigation: auto;
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-}
-
-::view-transition-group(main-nav) {
-  animation-duration: var(--duration-slow);
-  animation-timing-function: var(--ease-standard);
-}
-
-::view-transition-old(main-nav),
-::view-transition-new(main-nav) {
-  animation-duration: var(--duration-slow);
-  animation-timing-function: var(--ease-standard);
-}
-
 /* ---------- Movimento reduzido ---------- */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -212,11 +186,5 @@ h1, h2, h3, h4, h5, h6 {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
   }
 }

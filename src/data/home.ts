@@ -18,7 +18,8 @@ export const hero = {
 };
 
 export const projectsSection = {
-  title: "Projects",
+  // Antes "Projects": renomeado para casar com o item "Work" da navegação
+  title: "Work",
 };
 
 /* Cards da Home. A ordem aqui é a ordem na tela. */

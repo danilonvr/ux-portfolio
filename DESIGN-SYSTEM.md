@@ -140,6 +140,7 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 | `--duration-slow` | 600ms                          | Entrada de palavras, zoom do card  |
 | `--ease-standard` | `cubic-bezier(0.4, 0, 0.2, 1)` | Padrão (mudanças de cor)           |
 | `--ease-out`      | `cubic-bezier(0.22, 1, 0.36, 1)` | Movimentos de entrada e deslocamento |
+| `--ease-decelerate` | `cubic-bezier(0, 0, 0.2, 1)` | Pílula da navegação |
 
 > **Aproximação.** O Framer não expõe as curvas usadas. Estes valores foram escolhidos por equivalência visual e serão calibrados lado a lado.
 
@@ -175,8 +176,12 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 | tablet     | Sem pílula                             | Igual ao desktop                 | Igual ao desktop  |
 | phone      | Sem pílula                             | Botão "Menu" abre painel         | Dentro do painel  |
 
-- **Item de nav:** `.text-nav`, padding 10px 16px, `--color-text-secondary`. Hover → `--color-highlight`. Ativo (página atual) → fundo `--color-selected-bg`, contorno interno de 1px `--color-selected-border`, texto `--color-text-primary`.
-- **Troca de página:** a pílula da página antiga se dilui enquanto a da nova aparece (`--duration-slow`, `--ease-standard`), via View Transitions entre documentos (`global.css`). O resto da página troca na hora. Chrome, Edge e Safari 18.2+; no Firefox a troca é instantânea.
+- **Item de nav:** `.text-nav`, padding 10px 16px, texto `--color-text-tertiary`. Hover e item ativo → `--color-text-primary` (o hover só escurece o texto; nada se move).
+- **Pílula do item ativo:** um único elemento para a nav inteira, com fundo `--color-selected-bg` e contorno interno de 1px `--color-selected-border`. Ela desliza até o item ativo animando posição e largura (`--duration-base`, `--ease-decelerate`). Referência: liumichelle.com.
+  - **Entre páginas:** ao clicar, a posição atual fica guardada; a página nova nasce com a pílula ali e desliza até o item certo. Funciona em todos os navegadores.
+  - **Na Home:** "Work" fica ativo quando a seção de projetos (`#work`) passa de 25% da tela. Clicar em Home ou Work rola suavemente, sem recarregar.
+  - **Nas páginas de case:** "Work" fica ativo.
+  - Sem JavaScript e no menu mobile, o próprio item ativo recebe o fundo (sem animação).
 - "Work" é uma âncora da Home (`/#projects`) e nunca fica ativo.
 - **Menu mobile:**
   - Toggle "Menu" ⇄ "Close" com ícone de 3 linhas que vira X.
@@ -299,6 +304,8 @@ Registro do que foi decidido e por quê. Mais recente em cima.
 
 | Data       | Decisão | Motivo |
 |------------|---------|--------|
+| 2026-10-22 | Nav com pílula única que desliza (referência: liumichelle.com); substitui a fusão por View Transition. | Pedido do Danilo; a técnica nova funciona também no Firefox. |
+| 2026-10-22 | Seção "Projects" da Home renomeada para "Work" (âncora `#work`), e "Work" acende na nav ao chegar nela. | O nome do item da nav e o do destino passam a ser o mesmo. |
 | 2026-10-22 | Tokens de texto renomeados por papel: primário, secundário, terciário. `--color-accent` virou `--color-highlight`. | Pedido do Danilo; nomes por ênfase em vez de opacidade. |
 | 2026-10-22 | Item ativo da nav: fundo `#EFEFF1` + contorno 15%, com transição de fusão entre páginas. Sumário: ativo em verde. | Pedido do Danilo. |
 | 2026-10-22 | Sumário com dois níveis (`##` e `###`), grupo da seção atual aberto pela rolagem, sem contadores numéricos. | Referência trazida pelo Danilo; números não informam nada num case. |
@@ -323,7 +330,7 @@ Registro do que foi decidido e por quê. Mais recente em cima.
 - [ ] Idioma da página declarado como `pt-BR`, mas o conteúdo é em inglês. Afeta leitores de tela e SEO.
 - [ ] "Get in Touch" e "Contact Me" levam ao LinkedIn, não ao email.
 - [ ] Contraste baixo de `--color-text-muted` (ver seção Cor).
-- [ ] Ao clicar em "Work", a página rola até o título "Projects", mas ele fica escondido atrás do header fixo. Correção sugerida: `scroll-margin-top: var(--header-height)` no `#projects`.
+- [x] ~~Ao clicar em "Work", o título ficava escondido atrás do header fixo.~~ Corrigido (2026-10-22).
 - [ ] O relógio do footer diz "Brazil", mas mostra a hora de quem visita. Para mostrar Brasília: `timeZone: "America/Sao_Paulo"` em `src/data/site.ts`.
 - [ ] O link do Jira (Stack) carrega parâmetros de rastreamento de anúncio (`gclid` etc.). Sugestão: `https://www.atlassian.com/software/jira`.
 - [ ] Nos cards de experiência, os itens da descrição são separados por espaço duplo num único parágrafo; na tela viram texto corrido. Uma lista com marcadores leria melhor.
