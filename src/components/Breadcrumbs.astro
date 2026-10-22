@@ -1,7 +1,7 @@
 ---
 /*
  * Breadcrumbs — trilha de navegação ("Home / About").
- * Links em --color-text-80 (hover: destaque + sublinhado); página atual em --color-text-60.
+ * Links em --color-text-secondary (hover: destaque + sublinhado); página atual em --color-text-tertiary.
  *
  * Spec: DESIGN-SYSTEM.md → Componentes → Breadcrumbs
  */
@@ -42,7 +42,7 @@ const { items } = Astro.props;
 
   .separator,
   .crumb-link {
-    color: var(--color-text-80);
+    color: var(--color-text-secondary);
   }
 
   .crumb-link {
@@ -50,11 +50,11 @@ const { items } = Astro.props;
   }
 
   .crumb-link:hover {
-    color: var(--color-accent);
+    color: var(--color-highlight);
     text-decoration: underline;
   }
 
   .current {
-    color: var(--color-text-60);
+    color: var(--color-text-tertiary);
   }
 </style>

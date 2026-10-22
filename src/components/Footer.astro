@@ -15,7 +15,7 @@ import { links, footerColumns, footerCta, clock } from "../data/site";
 
 const columns = [footerColumns.index, footerColumns.projects, footerColumns.contact];
 
-// Link da página atual fica em --color-text (mais escuro), igual ao Framer.
+// Link da página atual fica em --color-text-primary (mais escuro), igual ao Framer.
 // "/" fica de fora: no Framer, "DF no Ponto" (que aponta para a Home) não é marcado na Home.
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 const isCurrent = (href: string) => href !== "/" && href === path;
@@ -129,7 +129,7 @@ const isCurrent = (href: string) => href !== "/" && href === path;
   }
 
   .eyebrow {
-    color: var(--color-text-60);
+    color: var(--color-text-tertiary);
   }
 
   .cta-actions {
@@ -154,7 +154,7 @@ const isCurrent = (href: string) => href !== "/" && href === path;
   }
 
   .column-title {
-    color: var(--color-text-60);
+    color: var(--color-text-tertiary);
   }
 
   .column-title--clock {
@@ -168,7 +168,7 @@ const isCurrent = (href: string) => href !== "/" && href === path;
     font-size: var(--text-clock-size);
     font-weight: var(--weight-medium);
     line-height: 1.2;
-    color: var(--color-text-60);
+    color: var(--color-text-tertiary);
     /* Reserva espaço para a hora não empurrar o layout ao carregar */
     min-width: 69px;
   }
@@ -185,18 +185,18 @@ const isCurrent = (href: string) => href !== "/" && href === path;
   }
 
   .footer-link {
-    color: var(--color-text-80);
+    color: var(--color-text-secondary);
     /* Não quebra linha: no phone "X (Formerly Twitter)" passa da coluna, igual ao Framer */
     white-space: nowrap;
     transition: color var(--duration-fast) var(--ease-standard);
   }
 
   .footer-link.current {
-    color: var(--color-text);
+    color: var(--color-text-primary);
   }
 
   .footer-link:hover {
-    color: var(--color-accent);
+    color: var(--color-highlight);
     text-decoration: underline;
   }
 

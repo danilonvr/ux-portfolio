@@ -6,7 +6,7 @@
  *   - Lista as seções (##). A seção atual se abre e mostra suas subseções (###), com recuo;
  *     as outras ficam fechadas. Só um grupo aberto por vez. Quem abre e fecha é a ROLAGEM
  *     (clicar numa seção rola até ela, e ela abre como consequência).
- *   - Seção e subseção atuais em --color-text; o resto esmaecido (--color-text-60).
+ *   - Seção e subseção atuais em --color-highlight (verde); o resto esmaecido (--color-text-tertiary).
  *   - Uma barra de 2px desliza até o item mais específico ativo (subseção, se houver).
  * tablet e phone (<1200px): barra compacta fixa abaixo do header, só com as seções (##).
  *
@@ -115,7 +115,7 @@ const tree = items.map((item) => {
   }
 
   .toc-label {
-    color: var(--color-text-60);
+    color: var(--color-text-tertiary);
   }
 
   .toc-track {
@@ -130,7 +130,7 @@ const tree = items.map((item) => {
     top: 0;
     width: 2px;
     height: var(--indicator-height, 0px);
-    background: var(--color-text);
+    background: var(--color-highlight);
     transform: translateY(var(--indicator-y, 0px));
     transition:
       transform var(--duration-base) var(--ease-out),
@@ -145,16 +145,17 @@ const tree = items.map((item) => {
   .toc-link {
     display: block;
     padding: var(--space-8) 0 var(--space-8) var(--space-16);
-    color: var(--color-text-60);
+    color: var(--color-text-tertiary);
     transition: color var(--duration-base) var(--ease-standard);
   }
 
+  /* Hover escurece o texto (não usa o verde, que aqui significa "ativo") */
   .toc-link:hover {
-    color: var(--color-accent);
+    color: var(--color-text-primary);
   }
 
   .toc-link.is-active {
-    color: var(--color-text);
+    color: var(--color-highlight);
   }
 
   /* Subseções: recuo de 12px a mais que as seções */
@@ -215,7 +216,7 @@ const tree = items.map((item) => {
     }
 
     .toc-bar-label {
-      color: var(--color-text-60);
+      color: var(--color-text-tertiary);
       flex-shrink: 0;
     }
 
@@ -225,12 +226,12 @@ const tree = items.map((item) => {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      color: var(--color-text);
+      color: var(--color-text-primary);
     }
 
     .toc-bar-chevron {
       flex-shrink: 0;
-      color: var(--color-text-60);
+      color: var(--color-text-tertiary);
       transition: transform var(--duration-base) var(--ease-standard);
     }
 
@@ -250,7 +251,7 @@ const tree = items.map((item) => {
     }
 
     .toc-bar-list .toc-link.is-active {
-      border-left-color: var(--color-text);
+      border-left-color: var(--color-highlight);
     }
   }
 </style>

@@ -69,7 +69,7 @@ const { name, category, href } = Astro.props;
 
   .name {
     flex: 1;
-    color: var(--color-text);
+    color: var(--color-text-primary);
   }
 
   /* No Framer a seta fica com 1px (invisível) e cresce para 16px no hover */
@@ -80,7 +80,7 @@ const { name, category, href } = Astro.props;
     width: 1px;
     height: 1px;
     overflow: hidden;
-    color: var(--color-text);
+    color: var(--color-text-primary);
     transition:
       width var(--duration-base) var(--ease-out),
       height var(--duration-base) var(--ease-out);
@@ -97,6 +97,6 @@ const { name, category, href } = Astro.props;
   }
 
   .category {
-    color: var(--color-text-80);
+    color: var(--color-text-secondary);
   }
 </style>

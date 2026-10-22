@@ -74,12 +74,12 @@ const { href, title, description, category, year } = Astro.props;
   }
 
   .title {
-    color: var(--color-text);
+    color: var(--color-text-primary);
     transition: color var(--duration-fast) var(--ease-standard);
   }
 
   .project-card:hover .title {
-    color: var(--color-accent);
+    color: var(--color-highlight);
   }
 
   /* Igual ao Framer: a descrição mostra no máximo 2 linhas e o resto é cortado (sem reticências) */
@@ -87,20 +87,20 @@ const { href, title, description, category, year } = Astro.props;
     /* 44px = altura fixa medida no Framer (≈ 2 linhas de 22,4px) */
     max-height: 44px;
     overflow: hidden;
-    color: var(--color-text-80);
+    color: var(--color-text-secondary);
   }
 
   .meta {
     display: flex;
     align-items: center;
     gap: var(--space-5);
-    color: var(--color-text-60);
+    color: var(--color-text-tertiary);
   }
 
   .dot {
     width: 4px;
     height: 4px;
     border-radius: var(--radius-pill);
-    background: var(--color-text-60);
+    background: var(--color-text-tertiary);
   }
 </style>

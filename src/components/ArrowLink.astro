@@ -31,7 +31,7 @@ const { href, external = false } = Astro.props;
     align-items: center;
     gap: var(--space-5);
     padding-bottom: var(--space-2);
-    color: var(--color-text);
+    color: var(--color-text-primary);
     white-space: nowrap;
   }
 
@@ -40,6 +40,6 @@ const { href, external = false } = Astro.props;
   }
 
   .arrow-link:hover :global(svg) {
-    color: var(--color-accent);
+    color: var(--color-highlight);
   }
 </style>

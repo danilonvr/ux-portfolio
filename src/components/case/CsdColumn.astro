@@ -21,11 +21,11 @@ const { title, tone = "strong" } = Astro.props;
     flex-direction: column;
     gap: var(--space-12);
     padding-top: var(--space-12);
-    border-top: 2px solid var(--color-text);
+    border-top: 2px solid var(--color-text-primary);
   }
 
   .tone-medium {
-    border-top-color: var(--color-text-60);
+    border-top-color: var(--color-text-tertiary);
   }
 
   .tone-soft {
@@ -33,11 +33,11 @@ const { title, tone = "strong" } = Astro.props;
   }
 
   .column-title {
-    color: var(--color-text);
+    color: var(--color-text-primary);
   }
 
   .column-body {
-    color: var(--color-text-80);
+    color: var(--color-text-secondary);
   }
 
   .column-body :global(ul) {

@@ -11,7 +11,7 @@ Documento vivo. Cresce junto com o site: cada token ou componente novo entra aqu
 ## Regras gerais
 
 1. **Nenhum valor solto em componente.** Cor, tamanho de fonte, espaçamento e raio sempre vêm de um token (`var(--...)`). Se o valor não existe, ele é criado em `tokens.css` e documentado aqui.
-2. **Tokens com nome de papel, não de aparência.** `--color-accent`, não `--color-teal`. Assim dá para trocar a cor sem renomear nada.
+2. **Tokens com nome de papel, não de aparência.** `--color-highlight`, não `--color-teal`. Assim dá para trocar a cor sem renomear nada.
 3. **Texto usa as classes de estilo** (`.text-heading-sm`, `.text-label`…), não `font-size` direto no componente.
 4. **Mudou o visual? Atualiza aqui no mesmo commit.**
 5. **Fase 1 = paridade com o Framer.** Nada muda de aparência sem decisão registrada na seção [Decisões](#decisões).
@@ -37,19 +37,23 @@ O CSS é escrito **desktop primeiro**: o valor padrão é o do desktop e as medi
 | Token                | Valor                     | Uso                                         |
 |----------------------|---------------------------|---------------------------------------------|
 | `--color-bg`         | `#F6F6F6`                 | Fundo da página, header e footer            |
-| `--color-text`       | `#050505`                 | Texto principal; fundo do botão primário    |
-| `--color-text-80`    | `#050505` a 80%           | Corpo de texto, itens de nav, links         |
-| `--color-text-60`    | `#050505` a 60%           | Rótulos e títulos secundários               |
+| `--color-text-primary`   | `#050505`              | **Texto primário:** títulos, maior ênfase; fundo do botão primário |
+| `--color-text-secondary` | `#050505` a 80%        | **Texto secundário:** corpo de texto, itens de nav, links |
+| `--color-text-tertiary`  | `#050505` a 60%        | **Texto terciário:** rótulos, metadados, itens inativos |
 | `--color-text-muted` | `#9FA0A3`                 | Metadados ("Brasília, Brazil"), ícone menu  |
 | `--color-on-dark`    | `#F6F6F6`                 | Texto sobre fundo escuro                    |
-| `--color-accent`     | `#00AE9D`                 | Estado de hover de links                    |
+| `--color-highlight`      | `#00AE9D`              | **Destaque:** item ativo do sumário; hover de links |
+| `--color-selected-bg`    | `#EFEFF1`              | Fundo do item selecionado na navegação principal |
+| `--color-selected-border`| `#050505` a 15%        | Contorno de 1px do item selecionado (elevação) |
 | `--color-border`     | `#050505` a 10%           | Linhas divisórias, topo do footer; placeholders de mídia |
 | `--color-border-subtle` | `#050505` a 5%         | Contorno de cards (projeto, experiência)    |
 | `--color-border-faint`  | `#050505` a 3%         | Contorno dos itens da stack                 |
 | `--color-glass`      | `#FFFFFF` a 50%           | Pílulas translúcidas (nav, logo no desktop) |
 | `--color-surface`    | `#050505` a 3%            | Fundo de cards e botões de ícone            |
 
-**Contraste (a revisar na fase de evolução):** `--color-text-muted` sobre `--color-bg` fica abaixo de 4.5:1 (WCAG AA para texto pequeno). Está igual ao Framer de propósito.
+**Contraste (a revisar):**
+- `--color-text-muted` sobre `--color-bg` fica abaixo de 4.5:1 (WCAG AA para texto pequeno). Igual ao Framer, de propósito.
+- `--color-highlight` (`#00AE9D`) sobre `--color-bg` dá **2,58:1**. Como cor de texto (sumário, hover), fica abaixo do mínimo de 4.5:1. Um tom que passa: `#007A6B` (4,86:1).
 
 ---
 
@@ -148,7 +152,7 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 ### Button
 `src/components/Button.astro` — link com aparência de botão primário.
 
-- Pílula `--color-text`, texto `.text-label` em `--color-on-dark`, seta 14px.
+- Pílula `--color-text-primary`, texto `.text-label` em `--color-on-dark`, seta 14px.
 - Padding 8px 16px, gap 5px, altura 36px.
 - **Hover:** nenhum (igual ao Framer).
 - Prop `icon={false}` remove a seta (usado em "View my Resume", no About).
@@ -158,8 +162,8 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 ### ArrowLink
 `src/components/ArrowLink.astro` — link de texto em caixa alta com seta 12px.
 
-- `.text-label` em `--color-text`, gap 5px, 2px de respiro embaixo.
-- **Hover:** só a seta vai para `--color-accent`; o texto não muda.
+- `.text-label` em `--color-text-primary`, gap 5px, 2px de respiro embaixo.
+- **Hover:** só a seta vai para `--color-highlight`; o texto não muda.
 - Usado em: "Contact Me" (footer), "More About me" (Home).
 
 ### Header
@@ -171,7 +175,8 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 | tablet     | Sem pílula                             | Igual ao desktop                 | Igual ao desktop  |
 | phone      | Sem pílula                             | Botão "Menu" abre painel         | Dentro do painel  |
 
-- **Item de nav:** `.text-nav`, padding 10px 16px, `--color-text-80`. Hover → `--color-accent`. Ativo (página atual) → fundo `--color-text`, texto `--color-on-dark`.
+- **Item de nav:** `.text-nav`, padding 10px 16px, `--color-text-secondary`. Hover → `--color-highlight`. Ativo (página atual) → fundo `--color-selected-bg`, contorno interno de 1px `--color-selected-border`, texto `--color-text-primary`.
+- **Troca de página:** a pílula da página antiga se dilui enquanto a da nova aparece (`--duration-slow`, `--ease-standard`), via View Transitions entre documentos (`global.css`). O resto da página troca na hora. Chrome, Edge e Safari 18.2+; no Firefox a troca é instantânea.
 - "Work" é uma âncora da Home (`/#projects`) e nunca fica ativo.
 - **Menu mobile:**
   - Toggle "Menu" ⇄ "Close" com ícone de 3 linhas que vira X.
@@ -181,11 +186,11 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 ### Footer
 `src/components/Footer.astro`
 
-- **CTA:** "Lets talk?" (`.text-heading-sm`, `--color-text-60`) + frase (`.text-heading-cta`) + Button "Resume" e ArrowLink "Contact Me".
-- **Colunas:** título `.text-heading-sm` em `--color-text-60`; links `.text-heading-md` em `--color-text-80`, sem quebra de linha.
-  - Hover de link: `--color-accent` + sublinhado.
+- **CTA:** "Lets talk?" (`.text-heading-sm`, `--color-text-tertiary`) + frase (`.text-heading-cta`) + Button "Resume" e ArrowLink "Contact Me".
+- **Colunas:** título `.text-heading-sm` em `--color-text-tertiary`; links `.text-heading-md` em `--color-text-secondary`, sem quebra de linha.
+  - Hover de link: `--color-highlight` + sublinhado.
 - **Relógio:** formato "7:04 PM", atualiza a cada minuto. Mostra a hora **local de quem visita** (igual ao Framer). O fuso é configurável em `src/data/site.ts`.
-- **Link da página atual:** fica em `--color-text` (ex.: "About" quando se está no About).
+- **Link da página atual:** fica em `--color-text-primary` (ex.: "About" quando se está no About).
 - **Layout:**
   - desktop: CTA 400px + colunas 3 × 213px lado a lado (gap 100px).
   - tablet: CTA em cima, colunas em 3 partes iguais (gap 50px entre blocos).
@@ -214,13 +219,13 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 `src/components/EmailRoll.astro` — link de email com efeito de rolagem.
 
 - Duas cópias empilhadas (gap 10px) numa janela da altura de uma linha.
-- **Hover e foco pelo teclado:** a pilha sobe ~32px e mostra a cópia em `--color-accent` (`--duration-base`, `--ease-out`).
+- **Hover e foco pelo teclado:** a pilha sobe ~32px e mostra a cópia em `--color-highlight` (`--duration-base`, `--ease-out`).
 - A cópia de destaque é escondida de leitores de tela, para o email não ser lido duas vezes.
 
 ### IconButton
 `src/components/IconButton.astro` — link redondo só com ícone.
 
-- 40×40px, padding 8px, raio total, fundo `--color-surface`, ícone 24px em `--color-text`.
+- 40×40px, padding 8px, raio total, fundo `--color-surface`, ícone 24px em `--color-text-primary`.
 - **Hover:** nenhum (igual ao Framer).
 - `label` é obrigatório (é o texto que o leitor de tela anuncia).
 
@@ -230,9 +235,9 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 - Fundo `--color-surface`, sem raio, contorno 1px `--color-border-subtle`.
 - Imagem na proporção 590:443; depois, bloco com padding 20px e gap 10px.
   - Título: `.text-heading-card`.
-  - Descrição: `.text-body` em `--color-text-80`. Mostra no máximo 44px (≈2 linhas) e o resto é **cortado sem reticências**, igual ao Framer.
-  - Metadados: categoria, ponto de 4px e ano (`.text-small` em `--color-text-60`).
-- **Hover:** imagem cresce para 105% dentro do card (`--duration-slow`) e título vai para `--color-accent`.
+  - Descrição: `.text-body` em `--color-text-secondary`. Mostra no máximo 44px (≈2 linhas) e o resto é **cortado sem reticências**, igual ao Framer.
+  - Metadados: categoria, ponto de 4px e ano (`.text-small` em `--color-text-tertiary`).
+- **Hover:** imagem cresce para 105% dentro do card (`--duration-slow`) e título vai para `--color-highlight`.
 - Grade: 2 colunas no desktop/tablet, 1 no phone, gap 20px. Cards não esticam para igualar alturas.
 
 ### Divider
@@ -241,19 +246,19 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 ### Breadcrumbs
 `src/components/Breadcrumbs.astro` — trilha "Home / About".
 
-- `.text-body`; links e "/" em `--color-text-80`, página atual em `--color-text-60`; gap 5px.
-- **Hover do link:** `--color-accent` + sublinhado.
+- `.text-body`; links e "/" em `--color-text-secondary`, página atual em `--color-text-tertiary`; gap 5px.
+- **Hover do link:** `--color-highlight` + sublinhado.
 
 ### ExperienceCard
 `src/components/ExperienceCard.astro` — cargo, empresa, período e descrição.
 
 - Padding 20px, gap 20px, raio `--radius-md`, fundo `--color-surface`, contorno `--color-border-subtle`.
-- Cargo: `.text-heading-item`. Empresa e período: `.text-small` em `--color-text-60` com ícones *light* de 16px.
+- Cargo: `.text-heading-item`. Empresa e período: `.text-small` em `--color-text-tertiary` com ícones *light* de 16px.
 - desktop/tablet: cargo à esquerda, empresa e período alinhados à direita. phone: tudo empilhado à esquerda.
 - **Hover:** nenhum.
 
 ### StackItem
-`src/components/StackItem.astro` — ferramenta com logo (50px, `--radius-sm`), nome (`.text-heading-sm`) e categoria (`.text-small` em `--color-text-80`).
+`src/components/StackItem.astro` — ferramenta com logo (50px, `--radius-sm`), nome (`.text-heading-sm`) e categoria (`.text-small` em `--color-text-secondary`).
 
 - Padding 10px, gap 10px, raio `--radius-md`, contorno `--color-border-faint`.
 - **Hover:** fundo `--color-surface` e seta de 16px que cresce ao lado do nome (`--duration-base`).
@@ -264,15 +269,15 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 
 - **CaseHero:** categoria, título (`.text-title`), subtítulo (`.text-lead`) à esquerda; ficha técnica (Company, Role, Duration, Year) à direita com divisórias; capa 21:9 embaixo, largura total.
 - **Corpo:** sumário (240px) à esquerda + conteúdo à direita, gap 100px. Abaixo de 1200px, empilham.
-- **Texto do .mdx:** `##` = `.text-heading-lg` com 80px acima; `###` = `.text-heading-item`; parágrafos `.text-body` em `--color-text-80`; lista numerada com divisórias e números `01`.
+- **Texto do .mdx:** `##` = `.text-heading-lg` com 80px acima; `###` = `.text-heading-item`; parágrafos `.text-body` em `--color-text-secondary`; lista numerada com divisórias e números `01`.
 - **Blocos:** Columns, Media, Gallery, Grid/GridItem, Csd/CsdColumn, Quote (ver o guia). Todos usam só tokens.
 
 ### CaseToc (sumário com scroll-spy)
 `src/components/case/CaseToc.astro`
 
 - Montado automaticamente a partir dos títulos `##` (seções) e `###` (subseções) do case.
-- **desktop (≥1200px):** coluna fixa ao rolar (`top` = altura do header + 24px). Item ativo em `--color-text`; demais em `--color-text-60`; hover `--color-accent`. Uma barra de 2px desliza até o item ativo mais específico (`--duration-base`, `--ease-out`).
-- **Subseções:** só a seção atual fica aberta, mostrando seus `###` com 12px a mais de recuo; as outras ficam fechadas. Quem abre e fecha é a rolagem (clicar numa seção rola até ela e ela abre). A abertura anima a altura e a opacidade (`--duration-base`); grupos fechados ficam fora do foco do teclado (`inert`). Seções sem `###` são itens simples, sem seta. O ativo usa preto + barra, não o teal — o teal continua significando "clicável" (hover).
+- **desktop (≥1200px):** coluna fixa ao rolar (`top` = altura do header + 24px). Seção e subseção ativas em `--color-highlight`; demais em `--color-text-tertiary`; hover escurece para `--color-text-primary` (o verde aqui significa "ativo"). Uma barra de 2px em `--color-highlight` desliza até o item ativo mais específico (`--duration-base`, `--ease-out`).
+- **Subseções:** só a seção atual fica aberta, mostrando seus `###` com 12px a mais de recuo; as outras ficam fechadas. Quem abre e fecha é a rolagem (clicar numa seção rola até ela e ela abre). A abertura anima a altura e a opacidade (`--duration-base`); grupos fechados ficam fora do foco do teclado (`inert`). Seções sem `###` são itens simples, sem seta. 
 - **tablet e phone:** barra fixa abaixo do header ("On this page" + seção atual + seta). Mostra só as seções (`##`), porque o texto composto seria cortado na largura do phone. Toca e abre a lista; Esc ou toque fora fecham.
 - **Quando uma seção fica ativa:** quando o título passa de 25% da área visível abaixo do header. No fim da página, a última seção fica ativa. Títulos lado a lado (ex.: Context | Solution) acendem juntos e a barra cobre os dois.
 - **Clique:** rolagem suave até a seção, parando abaixo do header (e da barra, no mobile); o destaque trava no item clicado até a rolagem terminar; atualiza o `#` da URL; leva o foco do teclado para a seção. Com movimento reduzido, a rolagem é instantânea.
@@ -294,6 +299,8 @@ Registro do que foi decidido e por quê. Mais recente em cima.
 
 | Data       | Decisão | Motivo |
 |------------|---------|--------|
+| 2026-10-22 | Tokens de texto renomeados por papel: primário, secundário, terciário. `--color-accent` virou `--color-highlight`. | Pedido do Danilo; nomes por ênfase em vez de opacidade. |
+| 2026-10-22 | Item ativo da nav: fundo `#EFEFF1` + contorno 15%, com transição de fusão entre páginas. Sumário: ativo em verde. | Pedido do Danilo. |
 | 2026-10-22 | Sumário com dois níveis (`##` e `###`), grupo da seção atual aberto pela rolagem, sem contadores numéricos. | Referência trazida pelo Danilo; números não informam nada num case. |
 | 2026-10-21 | Template de case = Direção B do canvas (abertura dividida + sumário à esquerda). Seções que a B não desenhou seguem a mesma linguagem (divisórias em vez de cards). | Escolha do Danilo após comparar as opções A, B e C. |
 | 2026-10-21 | Cases escritos em MDX; o sumário vem dos títulos `##`. | Criar um case novo = escrever o texto; nada de mexer no layout. |

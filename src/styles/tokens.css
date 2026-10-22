@@ -16,12 +16,19 @@
 :root {
   /* ---------- Cor ---------- */
   --color-bg: #f6f6f6;                    /* fundo da página */
-  --color-text: #050505;                  /* texto principal, fundo de botão primário */
-  --color-text-80: rgb(5 5 5 / 0.8);      /* texto de corpo, links de navegação */
-  --color-text-60: rgb(5 5 5 / 0.6);      /* rótulos e títulos secundários */
-  --color-text-muted: #9fa0a3;            /* metadados (ex.: "Brasília, Brazil") */
-  --color-on-dark: #f6f6f6;               /* texto sobre fundo escuro */
-  --color-accent: #00ae9d;                /* hover de links */
+  /* Texto: três níveis de ênfase */
+  --color-text-primary: #050505;            /* títulos, texto de maior ênfase; fundo do botão primário */
+  --color-text-secondary: rgb(5 5 5 / 0.8); /* corpo de texto, links de navegação */
+  --color-text-tertiary: rgb(5 5 5 / 0.6);  /* rótulos, metadados, itens inativos */
+  --color-text-muted: #9fa0a3;              /* metadados herdados do Framer (ex.: "Brasília, Brazil") */
+  --color-on-dark: #f6f6f6;                 /* texto sobre fundo escuro */
+
+  /* Destaque: estado ativo (sumário) e hover de links */
+  --color-highlight: #00ae9d;
+
+  /* Item selecionado da navegação principal */
+  --color-selected-bg: #efeff1;
+  --color-selected-border: rgb(5 5 5 / 0.15);
   --color-border: rgb(5 5 5 / 0.1);       /* linhas divisórias, topo do footer */
   --color-border-subtle: rgb(5 5 5 / 0.05); /* contorno de cards (projeto, experiência) */
   --color-border-faint: rgb(5 5 5 / 0.03);  /* contorno dos itens da stack */

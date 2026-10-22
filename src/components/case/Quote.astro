@@ -36,7 +36,7 @@ const { author, variant = "plain" } = Astro.props;
   .quote--highlight {
     padding: var(--space-30);
     border-radius: var(--radius-lg);
-    background: var(--color-text);
+    background: var(--color-text-primary);
   }
 
   .quote--highlight .quote-text {
@@ -57,11 +57,11 @@ const { author, variant = "plain" } = Astro.props;
   }
 
   .quote--plain .quote-text {
-    color: var(--color-text-80);
+    color: var(--color-text-secondary);
   }
 
   .quote--plain .quote-author {
     order: -1;
-    color: var(--color-text-60);
+    color: var(--color-text-tertiary);
   }
 </style>

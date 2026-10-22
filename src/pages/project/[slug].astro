@@ -86,7 +86,7 @@ for (const heading of rendered?.headings ?? []) {
     font-size: var(--text-heading-lg-size);
     font-weight: var(--weight-medium);
     line-height: 1.2;
-    color: var(--color-text);
+    color: var(--color-text-primary);
     /* Para o título não ficar atrás do header fixo ao chegar pela âncora */
     scroll-margin-top: calc(var(--header-height) + var(--space-24));
   }
@@ -110,16 +110,16 @@ for (const heading of rendered?.headings ?? []) {
     font-size: var(--text-heading-item-size);
     font-weight: var(--weight-medium);
     line-height: 1.2;
-    color: var(--color-text);
+    color: var(--color-text-primary);
   }
 
   .case-content :global(p) {
     margin: 0 0 var(--space-16);
-    color: var(--color-text-80);
+    color: var(--color-text-secondary);
   }
 
   .case-content :global(strong) {
-    color: var(--color-text);
+    color: var(--color-text-primary);
     font-weight: var(--weight-medium);
   }
 
@@ -137,7 +137,7 @@ for (const heading of rendered?.headings ?? []) {
     gap: var(--space-20);
     padding: var(--space-16) 0;
     border-bottom: 1px solid var(--color-border);
-    color: var(--color-text-80);
+    color: var(--color-text-secondary);
     counter-increment: item;
   }
 
@@ -146,6 +146,6 @@ for (const heading of rendered?.headings ?? []) {
     flex-shrink: 0;
     width: 24px;
     font-family: var(--font-serif);
-    color: var(--color-text-60);
+    color: var(--color-text-tertiary);
   }
 </style>
