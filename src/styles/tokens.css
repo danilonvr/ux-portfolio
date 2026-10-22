@@ -29,6 +29,12 @@
   /* Item selecionado da navegação principal */
   --color-selected-bg: #efeff1;
   --color-selected-border: rgb(5 5 5 / 0.15);
+  /* Elevação do item selecionado: contorno de 1px + sombra suave embaixo + brilho branco no topo
+     (inspirado em liumichelle.com). Usado como box-shadow. */
+  --shadow-selected:
+    inset 0 0 0 1px var(--color-selected-border),
+    inset 0 1px 1px rgb(255 255 255 / 0.9),
+    0 2px 8px rgb(0 0 0 / 0.06);
   --color-border: rgb(5 5 5 / 0.1);       /* linhas divisórias, topo do footer */
   --color-border-subtle: rgb(5 5 5 / 0.05); /* contorno de cards (projeto, experiência) */
   --color-border-faint: rgb(5 5 5 / 0.03);  /* contorno dos itens da stack */

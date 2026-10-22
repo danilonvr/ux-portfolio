@@ -45,6 +45,7 @@ O CSS é escrito **desktop primeiro**: o valor padrão é o do desktop e as medi
 | `--color-highlight`      | `#00AE9D`              | **Destaque:** item ativo do sumário; hover de links |
 | `--color-selected-bg`    | `#EFEFF1`              | Fundo do item selecionado na navegação principal |
 | `--color-selected-border`| `#050505` a 15%        | Contorno de 1px do item selecionado (elevação) |
+| `--shadow-selected`      | contorno 1px + brilho branco no topo + sombra `0 2px 8px` a 6% | Elevação do item selecionado da navegação |
 | `--color-border`     | `#050505` a 10%           | Linhas divisórias, topo do footer; placeholders de mídia |
 | `--color-border-subtle` | `#050505` a 5%         | Contorno de cards (projeto, experiência)    |
 | `--color-border-faint`  | `#050505` a 3%         | Contorno dos itens da stack                 |
@@ -177,7 +178,7 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 | phone      | Sem pílula                             | Botão "Menu" abre painel         | Dentro do painel  |
 
 - **Item de nav:** `.text-nav`, padding 10px 16px, texto `--color-text-tertiary`. Hover e item ativo → `--color-text-primary` (o hover só escurece o texto; nada se move).
-- **Pílula do item ativo:** um único elemento para a nav inteira, com fundo `--color-selected-bg` e contorno interno de 1px `--color-selected-border`. Ela desliza até o item ativo animando posição e largura (`--duration-base`, `--ease-decelerate`). Referência: liumichelle.com.
+- **Pílula do item ativo:** um único elemento para a nav inteira, com fundo `--color-selected-bg` e elevação `--shadow-selected` (contorno interno de 1px `--color-selected-border` + brilho branco no topo + sombra suave embaixo). Ela desliza até o item ativo animando posição e largura (`--duration-slow` = 600ms, `--ease-decelerate`). Referência: liumichelle.com.
   - **Entre páginas:** ao clicar, a posição atual fica guardada; a página nova nasce com a pílula ali e desliza até o item certo. Funciona em todos os navegadores.
   - **Na Home:** "Work" fica ativo quando a seção de projetos (`#work`) passa de 25% da tela. Clicar em Home ou Work rola suavemente, sem recarregar.
   - **Nas páginas de case:** "Work" fica ativo.
@@ -304,6 +305,7 @@ Registro do que foi decidido e por quê. Mais recente em cima.
 
 | Data       | Decisão | Motivo |
 |------------|---------|--------|
+| 2026-10-22 | Pílula da nav: 600ms (antes 300ms) e elevação com sombra suave (`--shadow-selected`). Em teste. | Danilo achou 300ms rápido demais. |
 | 2026-10-22 | Nav com pílula única que desliza (referência: liumichelle.com); substitui a fusão por View Transition. | Pedido do Danilo; a técnica nova funciona também no Firefox. |
 | 2026-10-22 | Seção "Projects" da Home renomeada para "Work" (âncora `#work`), e "Work" acende na nav ao chegar nela. | O nome do item da nav e o do destino passam a ser o mesmo. |
 | 2026-10-22 | Tokens de texto renomeados por papel: primário, secundário, terciário. `--color-accent` virou `--color-highlight`. | Pedido do Danilo; nomes por ênfase em vez de opacidade. |

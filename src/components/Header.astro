@@ -320,7 +320,7 @@ const isActive = (href: string) => {
     transform: translateX(var(--pill-x, 0px));
     border-radius: var(--radius-pill);
     background: var(--color-selected-bg);
-    box-shadow: inset 0 0 0 1px var(--color-selected-border);
+    box-shadow: var(--shadow-selected);
     opacity: 0;
     pointer-events: none;
   }
@@ -331,15 +331,15 @@ const isActive = (href: string) => {
 
   .nav-pill.is-animated {
     transition:
-      transform var(--duration-base) var(--ease-decelerate),
-      width var(--duration-base) var(--ease-decelerate);
+      transform var(--duration-slow) var(--ease-decelerate),
+      width var(--duration-slow) var(--ease-decelerate);
   }
 
   /* Sem JavaScript (ou no menu mobile): o próprio item recebe o fundo */
   .nav--bar:not(.has-pill) .nav-item.active,
   .nav--panel .nav-item.active {
     background: var(--color-selected-bg);
-    box-shadow: inset 0 0 0 1px var(--color-selected-border);
+    box-shadow: var(--shadow-selected);
   }
 
   /* ---------- Toggle do menu (só phone) ---------- */
