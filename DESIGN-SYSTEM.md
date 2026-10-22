@@ -270,9 +270,10 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 ### CaseToc (sumário com scroll-spy)
 `src/components/case/CaseToc.astro`
 
-- Montado automaticamente a partir dos títulos `##` do case.
-- **desktop (≥1200px):** coluna fixa ao rolar (`top` = altura do header + 24px). Item ativo em `--color-text`; demais em `--color-text-60`; hover `--color-accent`. Uma barra de 2px desliza até o item ativo (`--duration-base`, `--ease-out`).
-- **tablet e phone:** barra fixa abaixo do header ("On this page" + seção atual + seta). Toca e abre a lista; Esc ou toque fora fecham.
+- Montado automaticamente a partir dos títulos `##` (seções) e `###` (subseções) do case.
+- **desktop (≥1200px):** coluna fixa ao rolar (`top` = altura do header + 24px). Item ativo em `--color-text`; demais em `--color-text-60`; hover `--color-accent`. Uma barra de 2px desliza até o item ativo mais específico (`--duration-base`, `--ease-out`).
+- **Subseções:** só a seção atual fica aberta, mostrando seus `###` com 12px a mais de recuo; as outras ficam fechadas. Quem abre e fecha é a rolagem (clicar numa seção rola até ela e ela abre). A abertura anima a altura e a opacidade (`--duration-base`); grupos fechados ficam fora do foco do teclado (`inert`). Seções sem `###` são itens simples, sem seta. O ativo usa preto + barra, não o teal — o teal continua significando "clicável" (hover).
+- **tablet e phone:** barra fixa abaixo do header ("On this page" + seção atual + seta). Mostra só as seções (`##`), porque o texto composto seria cortado na largura do phone. Toca e abre a lista; Esc ou toque fora fecham.
 - **Quando uma seção fica ativa:** quando o título passa de 25% da área visível abaixo do header. No fim da página, a última seção fica ativa. Títulos lado a lado (ex.: Context | Solution) acendem juntos e a barra cobre os dois.
 - **Clique:** rolagem suave até a seção, parando abaixo do header (e da barra, no mobile); o destaque trava no item clicado até a rolagem terminar; atualiza o `#` da URL; leva o foco do teclado para a seção. Com movimento reduzido, a rolagem é instantânea.
 - **Acessibilidade:** `<nav>` com rótulo; item atual com `aria-current="location"`.
@@ -293,6 +294,7 @@ Registro do que foi decidido e por quê. Mais recente em cima.
 
 | Data       | Decisão | Motivo |
 |------------|---------|--------|
+| 2026-10-22 | Sumário com dois níveis (`##` e `###`), grupo da seção atual aberto pela rolagem, sem contadores numéricos. | Referência trazida pelo Danilo; números não informam nada num case. |
 | 2026-10-21 | Template de case = Direção B do canvas (abertura dividida + sumário à esquerda). Seções que a B não desenhou seguem a mesma linguagem (divisórias em vez de cards). | Escolha do Danilo após comparar as opções A, B e C. |
 | 2026-10-21 | Cases escritos em MDX; o sumário vem dos títulos `##`. | Criar um case novo = escrever o texto; nada de mexer no layout. |
 | 2026-10-21 | Tablet e phone: sumário vira barra compacta fixa abaixo do header. | Recomendação; a validar no teste. |

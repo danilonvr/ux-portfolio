@@ -21,7 +21,7 @@ cover: "Descrição da capa"                     # opcional
 ## 2. Seções e sumário
 
 Cada `## Título` vira uma seção e um item do sumário ("On this page"), automaticamente.
-Use `###` para subtítulos dentro de uma seção — eles **não** entram no sumário.
+Use `###` para subtítulos dentro de uma seção: eles aparecem no sumário recuados, só quando a seção está aberta (desktop).
 
 ## 3. Texto
 

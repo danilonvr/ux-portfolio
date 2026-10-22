@@ -3,43 +3,78 @@
  * CaseToc — sumário do case ("On this page") com scroll-spy.
  *
  * desktop (≥1200px): coluna à esquerda, fixa enquanto a página rola.
- *   - A seção atual fica em --color-text; as outras esmaecidas (--color-text-60).
- *   - Uma barra de 2px desliza até o item ativo (animação principal do sumário).
- * tablet e phone (<1200px): barra compacta fixa abaixo do header, mostrando a seção atual.
- *   Ao tocar, abre a lista completa.
+ *   - Lista as seções (##). A seção atual se abre e mostra suas subseções (###), com recuo;
+ *     as outras ficam fechadas. Só um grupo aberto por vez. Quem abre e fecha é a ROLAGEM
+ *     (clicar numa seção rola até ela, e ela abre como consequência).
+ *   - Seção e subseção atuais em --color-text; o resto esmaecido (--color-text-60).
+ *   - Uma barra de 2px desliza até o item mais específico ativo (subseção, se houver).
+ * tablet e phone (<1200px): barra compacta fixa abaixo do header, só com as seções (##).
  *
- * A lista é montada a partir dos títulos "##" do arquivo .mdx do case.
- * Comportamento (script no fim): destaque ao rolar, clique com rolagem suave,
- * Esc fecha a lista no mobile, movimento reduzido = rolagem instantânea.
- *
+ * A lista é montada a partir dos títulos "##" e "###" do arquivo .mdx do case.
  * Spec: DESIGN-SYSTEM.md → Componentes → CaseToc
  */
 interface Props {
-  items: { slug: string; text: string }[];
+  items: { slug: string; text: string; children: { slug: string; text: string }[] }[];
   label?: string;
 }
 
 const { items, label = "On this page" } = Astro.props;
+
+// Índice único para cada título, na ordem em que aparecem na página
+let counter = 0;
+const tree = items.map((item) => {
+  const index = counter++;
+  return {
+    ...item,
+    index,
+    children: item.children.map((child) => ({ ...child, index: counter++, parent: index })),
+  };
+});
 ---
 
 <!-- Desktop: coluna lateral -->
 <nav class="toc" aria-label={label} data-toc>
   <p class="text-small toc-label">{label}</p>
-  <div class="toc-track">
+  <div class="toc-track" data-toc-track>
     <span class="toc-indicator" aria-hidden="true" data-toc-indicator></span>
     <ol class="toc-list">
-      {items.map((item, i) => (
-        <li>
-          <a class="toc-link text-small" href={`#${item.slug}`} data-toc-link data-index={i}>
+      {tree.map((item) => (
+        <li class="toc-item" data-toc-group={item.index}>
+          <a
+            class="toc-link text-small"
+            href={`#${item.slug}`}
+            data-toc-link
+            data-index={item.index}
+            data-parent={item.index}
+          >
             {item.text}
           </a>
+          {item.children.length > 0 && (
+            <div class="toc-sub" data-toc-sub inert>
+              <ol class="toc-sub-list">
+                {item.children.map((child) => (
+                  <li>
+                    <a
+                      class="toc-link toc-link--sub text-small"
+                      href={`#${child.slug}`}
+                      data-toc-link
+                      data-index={child.index}
+                      data-parent={child.parent}
+                    >
+                      {child.text}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
         </li>
       ))}
     </ol>
   </div>
 </nav>
 
-<!-- Tablet e phone: barra compacta -->
+<!-- Tablet e phone: barra compacta (só seções) -->
 <nav class="toc-bar" aria-label={`${label} (compacto)`} data-toc-bar>
   <button class="toc-bar-button" type="button" aria-expanded="false" aria-controls="toc-bar-panel">
     <span class="text-small toc-bar-label">{label}</span>
@@ -50,9 +85,15 @@ const { items, label = "On this page" } = Astro.props;
   </button>
   <div class="toc-bar-panel" id="toc-bar-panel" hidden>
     <ol class="toc-bar-list">
-      {items.map((item, i) => (
+      {tree.map((item) => (
         <li>
-          <a class="toc-link text-body" href={`#${item.slug}`} data-toc-link data-index={i}>
+          <a
+            class="toc-link text-body"
+            href={`#${item.slug}`}
+            data-toc-link
+            data-index={item.index}
+            data-parent={item.index}
+          >
             {item.text}
           </a>
         </li>
@@ -114,6 +155,31 @@ const { items, label = "On this page" } = Astro.props;
 
   .toc-link.is-active {
     color: var(--color-text);
+  }
+
+  /* Subseções: recuo de 12px a mais que as seções */
+  .toc-link--sub {
+    padding-left: calc(var(--space-16) + var(--space-12));
+  }
+
+  /* Grupo de subseções: abre e fecha animando a altura (técnica grid 0fr → 1fr) */
+  .toc-sub {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows var(--duration-base) var(--ease-out),
+      opacity var(--duration-base) var(--ease-standard);
+  }
+
+  .toc-sub > .toc-sub-list {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .toc-item.is-open .toc-sub {
+    grid-template-rows: 1fr;
+    opacity: 1;
   }
 
   /* ---------- Tablet e phone: barra compacta ---------- */
@@ -192,6 +258,7 @@ const { items, label = "On this page" } = Astro.props;
 <script>
   const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]"));
   const sidebarLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-toc] [data-toc-link]"));
+  const groups = Array.from(document.querySelectorAll<HTMLElement>("[data-toc-group]"));
   const indicator = document.querySelector<HTMLElement>("[data-toc-indicator]");
   const currentLabel = document.querySelector<HTMLElement>("[data-toc-current]");
   const bar = document.querySelector<HTMLElement>("[data-toc-bar]");
@@ -199,41 +266,57 @@ const { items, label = "On this page" } = Astro.props;
   const barPanel = bar?.querySelector<HTMLElement>(".toc-bar-panel");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  // Os títulos de seção, na ordem do sumário
-  const headings = sidebarLinks
-    .map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
-    .filter((el): el is HTMLElement => el !== null);
+  // Um item por título (## e ###), na ordem da página. O índice bate com data-index.
+  const entries = sidebarLinks
+    .map((link) => ({
+      link,
+      index: Number(link.dataset.index),
+      parent: Number(link.dataset.parent),
+      isSection: link.dataset.index === link.dataset.parent,
+      heading: document.getElementById(decodeURIComponent(link.hash.slice(1))),
+    }))
+    .filter((entry) => entry.heading !== null)
+    .sort((a, b) => a.index - b.index);
 
-  // Índices ativos. Seções lado a lado (ex.: Context | Solution) ficam ativas juntas.
+  const byIndex = new Map(entries.map((entry) => [entry.index, entry]));
+  const sections = entries.filter((entry) => entry.isSection);
+
+  let activeKey = "";
   let activeIndexes: number[] = [];
   let lockedUntil = 0; // durante a rolagem causada por um clique, o destaque não muda
 
   const headerHeight = () =>
     parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-height")) || 0;
+  const topOf = (el: HTMLElement | null) => el?.getBoundingClientRect().top ?? 0;
 
-  // Títulos na mesma altura da página (lado a lado) formam um grupo
-  function groupOf(index: number): number[] {
-    const top = headings[index]?.getBoundingClientRect().top ?? 0;
-    return headings
-      .map((heading, i) => (Math.abs(heading.getBoundingClientRect().top - top) < 4 ? i : -1))
-      .filter((i) => i >= 0);
+  // Seções na mesma altura da página (lado a lado, ex.: Context | Solution) formam um grupo
+  function sectionGroup(sectionIndex: number): number[] {
+    const top = topOf(byIndex.get(sectionIndex)?.heading ?? null);
+    return sections.filter((s) => Math.abs(topOf(s.heading) - top) < 4).map((s) => s.index);
   }
 
-  // Seção atual = o último título que já passou de ~25% da área visível abaixo do header
-  function findActive(): number[] {
+  // Item atual = o último título (seção ou subseção) que já passou de ~25% da área visível
+  function findActive(): number {
     const line = headerHeight() + window.innerHeight * 0.25;
-    let index = 0;
-    headings.forEach((heading, i) => {
-      if (heading.getBoundingClientRect().top <= line) index = i;
-    });
-    // Chegou ao fim da página: a última seção fica ativa mesmo que o título não tenha subido o bastante
+    let current = entries[0]?.index ?? 0;
+    for (const entry of entries) {
+      if (topOf(entry.heading) <= line) current = entry.index;
+    }
+    // Fim da página: a última seção fica ativa mesmo que o título não tenha subido o bastante
     const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
-    if (atBottom) index = headings.length - 1;
-    return groupOf(index);
+    if (atBottom) current = sections[sections.length - 1]?.index ?? current;
+    return current;
   }
 
-  function setActive(indexes: number[]) {
-    if (indexes.join() === activeIndexes.join()) return;
+  // Ativa o item e tudo que depende dele: a seção-mãe (e vizinhas lado a lado) e o grupo aberto
+  function setActive(index: number) {
+    const entry = byIndex.get(index);
+    if (!entry) return;
+    const sectionIndexes = sectionGroup(entry.parent);
+    const indexes = entry.isSection ? sectionIndexes : [...sectionIndexes, index];
+    const key = indexes.join();
+    if (key === activeKey) return;
+    activeKey = key;
     activeIndexes = indexes;
 
     tocLinks.forEach((link) => {
@@ -243,19 +326,39 @@ const { items, label = "On this page" } = Astro.props;
       else link.removeAttribute("aria-current");
     });
 
-    moveIndicator();
+    // Abre só o grupo da seção atual; os outros fecham
+    groups.forEach((group) => {
+      const isOpen = sectionIndexes.includes(Number(group.dataset.tocGroup));
+      group.classList.toggle("is-open", isOpen);
+      const sub = group.querySelector<HTMLElement>("[data-toc-sub]");
+      if (sub) sub.inert = !isOpen;
+    });
+
+    followIndicator();
     if (currentLabel) {
-      currentLabel.textContent = indexes.map((i) => headings[i]?.textContent ?? "").join(" · ");
+      currentLabel.textContent = sectionIndexes.map((i) => byIndex.get(i)?.heading?.textContent ?? "").join(" · ");
     }
   }
 
-  // A barra cobre do primeiro ao último item ativo
+  // A barra cobre o item mais específico ativo: a subseção, se houver; senão a(s) seção(ões)
   function moveIndicator() {
-    const first = sidebarLinks[activeIndexes[0]];
-    const last = sidebarLinks[activeIndexes[activeIndexes.length - 1]];
+    const sub = activeIndexes.find((i) => !byIndex.get(i)?.isSection);
+    const targets = sub !== undefined ? [sub] : activeIndexes;
+    const first = byIndex.get(targets[0])?.link;
+    const last = byIndex.get(targets[targets.length - 1])?.link;
     if (!indicator || !first || !last) return;
     indicator.style.setProperty("--indicator-y", `${first.offsetTop}px`);
     indicator.style.setProperty("--indicator-height", `${last.offsetTop + last.offsetHeight - first.offsetTop}px`);
+  }
+
+  // Enquanto um grupo abre/fecha, os itens se movem: a barra acompanha quadro a quadro
+  function followIndicator() {
+    const until = performance.now() + (reduceMotion.matches ? 0 : 350);
+    const step = () => {
+      moveIndicator();
+      if (performance.now() < until) requestAnimationFrame(step);
+    };
+    step();
   }
 
   // Atualiza no máximo uma vez por quadro durante a rolagem
@@ -292,23 +395,23 @@ const { items, label = "On this page" } = Astro.props;
     if (bar && !bar.contains(event.target as Node)) setPanel(false);
   });
 
-  // ---------- Clique num item: rolagem suave até a seção ----------
+  // ---------- Clique num item: rolagem suave até o título ----------
   tocLinks.forEach((link) => {
     link.addEventListener("click", (event) => {
-      const index = Number(link.dataset.index);
-      const target = headings[index];
-      if (!target) return;
+      const entry = byIndex.get(Number(link.dataset.index));
+      const target = entry?.heading;
+      if (!entry || !target) return;
       event.preventDefault();
 
       setPanel(false);
-      setActive(groupOf(index));
+      setActive(entry.index);
       // Trava o destaque no item clicado até a rolagem terminar
       lockedUntil = performance.now() + (reduceMotion.matches ? 0 : 1000);
 
       target.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
       history.replaceState(null, "", `#${target.id}`);
 
-      // Leva o foco do teclado para a seção, sem rolar de novo
+      // Leva o foco do teclado para o título, sem rolar de novo
       target.setAttribute("tabindex", "-1");
       target.focus({ preventScroll: true });
     });
