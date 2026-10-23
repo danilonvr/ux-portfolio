@@ -10,7 +10,7 @@ import Icon from "./Icon.astro";
 
 interface Props {
   href: string;
-  icon: "linkedin" | "x";
+  icon: string; // nome do ícone Phosphor (ex.: "linkedin-logo")
   label: string; // obrigatório: é o único texto do link para leitores de tela
   external?: boolean;
 }

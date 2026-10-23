@@ -3,15 +3,19 @@
  * PageStub — TEMPORÁRIO. Marca páginas que ainda não foram construídas.
  * Remover quando a página real entrar (ordem: Home → About → template de case).
  */
+import { getLang } from "../i18n";
+import { useTranslations } from "../i18n/ui";
+
 interface Props {
   name: string;
 }
 const { name } = Astro.props;
+const t = useTranslations(getLang(Astro.url));
 ---
 
 <section class="stub">
   <div class="container">
-    <p class="text-caption">[em construção] {name}</p>
+    <p class="text-caption">{t("stub.label")} {name}</p>
   </div>
 </section>
 

@@ -1,0 +1,14 @@
+---
+/*
+ * /pt/project/<slug> — case em português. Layout em src/components/case/CasePage.astro.
+ * EN: Portuguese case route.
+ */
+import CasePage from "../../../components/case/CasePage.astro";
+import { getCasePaths } from "../../../lib/cases";
+
+export function getStaticPaths() {
+  return getCasePaths("pt");
+}
+---
+
+<CasePage {...Astro.props} />

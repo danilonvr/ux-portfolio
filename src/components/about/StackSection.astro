@@ -4,7 +4,10 @@
  * Colunas: 3 (desktop) · 2 (tablet) · 1 (phone) · gap 20px.
  */
 import StackItem from "../StackItem.astro";
-import { stack } from "../../data/about";
+import { getAboutContent } from "../../data/about";
+import { getLang } from "../../i18n";
+
+const { stack } = getAboutContent(getLang(Astro.url));
 ---
 
 <section class="stack">

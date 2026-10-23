@@ -15,6 +15,8 @@ Documento vivo. Cresce junto com o site: cada token ou componente novo entra aqu
 3. **Texto usa as classes de estilo** (`.text-heading-sm`, `.text-label`…), não `font-size` direto no componente.
 4. **Mudou o visual? Atualiza aqui no mesmo commit.**
 5. **Fase 1 = paridade com o Framer.** Nada muda de aparência sem decisão registrada na seção [Decisões](#decisões).
+6. **Todo texto existe em inglês e português.** Ao criar ou mudar qualquer texto do site, escreva as duas versões no mesmo commit (ver [Idiomas](#idiomas)).
+7. **Todo ícone vem do Phosphor** (pacote oficial `@phosphor-icons/core`), pelo componente `Icon.astro`. Nada de SVG colado à mão.
 
 ---
 
@@ -125,10 +127,30 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 
 **Contornos:** o Framer desenha as bordas por cima do elemento (`::after`), sem alterar o tamanho. Aqui isso é a classe utilitária `.with-border` (`global.css`): adicione a classe e defina `--border-color` no componente. O raio acompanha o do elemento.
 
-**Ícones:** Phosphor (os mesmos do Framer). Componente `Icon.astro`.
-- Estilo *regular*: `arrow-up-right`, `linkedin`, `x`.
+| `--color-popover`  | branco a 90% + `--blur-glass` | Fundo de painéis flutuantes (dropdown do idioma) |
+| `--shadow-popover` | contorno 1px + sombras suaves | Elevação de painéis flutuantes |
+| `--radius-popover` | 20px         | Painéis flutuantes                    |
+
+**Ícones:** Phosphor, lidos do pacote oficial `@phosphor-icons/core` pelo componente `Icon.astro`. Uso: `<Icon name="globe" />`, `<Icon name="calendar" weight="light" size={16} />`. O nome é o mesmo do site phosphoricons.com; um nome errado quebra o build, de propósito.
+- Estilo *regular* (padrão): `arrow-up-right`, `arrow-left`, `arrow-right`, `caret-down`, `check`, `globe`, `linkedin-logo`, `x-logo`.
 - Estilo *light*: `buildings`, `calendar` (card de experiência).
-- Tamanhos usados: 12px (links de texto), 14px (botões), 16px (experiência, stack), 24px (redes sociais).
+- Tamanhos usados: 12px (links de texto), 14px (botões, ✓), 16px (experiência, stack, sumário), 18px (galeria, globo), 24px (redes sociais).
+
+---
+
+## Idiomas
+
+O site é bilíngue: **inglês na raiz** (`/`, `/about`, `/project/atraqui`) e **português em `/pt/`** (`/pt/`, `/pt/about`, `/pt/project/atraqui`).
+
+- **O idioma vem só da URL.** Não há detecção automática nem redirecionamento; a pessoa escolhe no globo do header.
+- **Onde ficam os textos:**
+  - interface (botões, rótulos, leitores de tela): `src/i18n/ui.ts`;
+  - conteúdo compartilhado (footer, `<head>`): `src/data/site.ts`;
+  - Home e About: `src/data/home.ts`, `src/data/about.ts` (blocos `en` e `pt`);
+  - cases: `src/content/cases/en/<slug>.mdx` e `src/content/cases/pt/<slug>.mdx`, com o mesmo nome de arquivo.
+- **Links internos** são escritos sem idioma (`"/about"`) e recebem o prefixo `/pt` por `localizePath()` (`src/i18n/index.ts`).
+- **`<html lang>`** é `en` ou `pt-BR`; cada página aponta para a sua versão no outro idioma (`hreflang`).
+- **Inglês** = copy do Framer (Fase 1). **Português** = tradução do inglês; rótulos de interface reaproveitam os termos do Framer ("Projetos", "Sobre Mim", "Entre em contato").
 
 ---
 
@@ -289,6 +311,16 @@ Escala: `2, 4, 5, 8, 10, 12, 16, 20, 24, 30, 40, 50, 60, 80, 100` → tokens `--
 - **Clique:** rolagem suave até a seção, parando abaixo do header (e da barra, no mobile); o destaque trava no item clicado até a rolagem terminar; atualiza o `#` da URL; leva o foco do teclado para a seção. Com movimento reduzido, a rolagem é instantânea.
 - **Acessibilidade:** `<nav>` com rótulo; item atual com `aria-current="location"`.
 
+### LangSwitcher (seletor de idioma)
+`src/components/LangSwitcher.astro`
+
+- **Botão:** círculo de 36px (34px no phone, para não alterar a altura do header), mesmo vidro translúcido da nav (`--color-glass` + `--blur-glass`), ícone `globe` 18px em `--color-text-tertiary`. Hover → `--color-text-primary`. Aberto → visual de selecionado (`--color-selected-bg` + `--shadow-selected`). Área de toque de 44px.
+- **Posição:** desktop/tablet, à direita do "Get in Touch"; phone, ao lado do "Menu".
+- **Dropdown:** alinhado à direita do botão, 8px abaixo; `--color-popover`, `--shadow-popover`, `--radius-popover`, padding 4px. Abre com fade + leve descida (200ms, `--ease-decelerate`).
+- **Opções:** cada idioma escrito na própria língua ("English", "Português"). Hover → `--color-surface`. Atual → mesma pílula da nav (`--color-selected-bg` + `--shadow-selected`) e ✓.
+- **Comportamento:** cada opção leva à mesma página no outro idioma. Fecha com Esc, clique fora, foco saindo ou ao escolher. ↓ no botão abre e foca a lista; ↑ ↓ circulam.
+- **Acessibilidade:** padrão *disclosure* (botão com `aria-expanded` + lista de links); opção atual com `aria-current`; `lang`/`hreflang` em cada opção.
+
 ### Placeholder
 `src/components/Placeholder.astro` — ocupa o lugar de imagens e vídeos, mantendo a proporção. Fundo `--color-border`.
 - `round`: círculo (avatar).
@@ -305,6 +337,10 @@ Registro do que foi decidido e por quê. Mais recente em cima.
 
 | Data       | Decisão | Motivo |
 |------------|---------|--------|
+| 2026-10-23 | Site bilíngue: inglês em `/`, português em `/pt/`; idioma escolhido só pelo seletor (sem detecção automática nem redirecionamento). | Pedido do Danilo: a pessoa escolhe exatamente o idioma. URLs separadas permitem compartilhar o link em PT e indexar as duas versões. |
+| 2026-10-23 | Português traduzido do inglês (não copiado do `/pt/` do Framer). | Escolha do Danilo: PT espelha o EN. |
+| 2026-10-23 | Ícones passam a vir do pacote oficial `@phosphor-icons/core`. | Pedido do Danilo: todos os ícones do site do Phosphor. |
+| 2026-10-23 | Header em grade de 3 colunas (logo · nav · ações) para a nav continuar centralizada com o globo ao lado do botão. | Sem isso a nav andaria ~20px para a esquerda. |
 | 2026-10-22 | Pílula da nav: 600ms (antes 300ms) e elevação com sombra suave (`--shadow-selected`). Em teste. | Danilo achou 300ms rápido demais. |
 | 2026-10-22 | Nav com pílula única que desliza (referência: liumichelle.com); substitui a fusão por View Transition. | Pedido do Danilo; a técnica nova funciona também no Firefox. |
 | 2026-10-22 | Seção "Projects" da Home renomeada para "Work" (âncora `#work`), e "Work" acende na nav ao chegar nela. | O nome do item da nav e o do destino passam a ser o mesmo. |
@@ -330,7 +366,7 @@ Registro do que foi decidido e por quê. Mais recente em cima.
 ## Problemas herdados do Framer (mantidos de propósito na Fase 1)
 
 - [ ] Link "DF no Ponto" do footer aponta para a Home, não para o case (`src/data/site.ts`).
-- [ ] Idioma da página declarado como `pt-BR`, mas o conteúdo é em inglês. Afeta leitores de tela e SEO.
+- [x] ~~Idioma da página declarado como `pt-BR`, mas o conteúdo é em inglês.~~ Corrigido com o site bilíngue (2026-10-23).
 - [ ] "Get in Touch" e "Contact Me" levam ao LinkedIn, não ao email.
 - [ ] Contraste baixo de `--color-text-muted` (ver seção Cor).
 - [x] ~~Ao clicar em "Work", o título ficava escondido atrás do header fixo.~~ Corrigido (2026-10-22).

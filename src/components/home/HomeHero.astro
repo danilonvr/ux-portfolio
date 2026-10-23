@@ -11,8 +11,12 @@ import RoleSlideshow from "../RoleSlideshow.astro";
 import ArrowLink from "../ArrowLink.astro";
 import EmailRoll from "../EmailRoll.astro";
 import IconButton from "../IconButton.astro";
-import { hero } from "../../data/home";
+import { getHomeContent, email } from "../../data/home";
 import { links } from "../../data/site";
+import { getLang, localizePath } from "../../i18n";
+
+const lang = getLang(Astro.url);
+const { hero } = getHomeContent(lang);
 ---
 
 <section class="hero">
@@ -26,19 +30,19 @@ import { links } from "../../data/site";
           <RoleSlideshow items={hero.roles} />
         </div>
         <p class="text-body description">{hero.description}</p>
-        <ArrowLink href="/about">{hero.moreLabel}</ArrowLink>
+        <ArrowLink href={localizePath("/about", lang)}>{hero.moreLabel}</ArrowLink>
       </div>
 
       <div class="contact">
         <div class="contact-group">
           <p class="text-small label">{hero.emailLabel}</p>
-          <EmailRoll email={hero.email} />
+          <EmailRoll email={email} />
         </div>
         <div class="contact-group">
           <p class="text-small label">{hero.socialLabel}</p>
           <div class="social">
-            <IconButton href={links.linkedin} icon="linkedin" label="LinkedIn" />
-            <IconButton href={links.x} icon="x" label="X (Twitter)" />
+            <IconButton href={links.linkedin} icon="linkedin-logo" label="LinkedIn" />
+            <IconButton href={links.x} icon="x-logo" label="X (Twitter)" />
           </div>
         </div>
       </div>

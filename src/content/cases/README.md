@@ -1,7 +1,12 @@
 # Como escrever um case
 
-Cada case é um arquivo `.mdx` nesta pasta. O nome do arquivo vira a URL:
-`atraqui.mdx` → `/project/atraqui`.
+Cada case existe em **dois arquivos**, um por idioma, com o mesmo nome:
+
+- `en/atraqui.mdx` → `/project/atraqui` (inglês)
+- `pt/atraqui.mdx` → `/pt/project/atraqui` (português)
+
+Regra do projeto: ao alterar um case, altere as duas versões no mesmo commit.
+Os imports de blocos dentro do `.mdx` começam com `../../../components/`.
 
 ## 1. Cabeçalho (obrigatório)
 
@@ -30,7 +35,7 @@ Lista numerada (`1.`, `2.`…) aparece com divisórias e números `01`, `02`.
 
 ## 4. Blocos
 
-Importe no topo do arquivo só os que for usar (veja `atraqui.mdx` como exemplo).
+Importe no topo do arquivo só os que for usar (veja `en/atraqui.mdx` como exemplo).
 
 | Bloco | Para quê | Exemplo |
 |---|---|---|

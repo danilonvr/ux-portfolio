@@ -5,8 +5,11 @@
  */
 import ExperienceCard from "../ExperienceCard.astro";
 import Button from "../Button.astro";
-import { experience } from "../../data/about";
+import { getAboutContent } from "../../data/about";
 import { links } from "../../data/site";
+import { getLang } from "../../i18n";
+
+const { experience } = getAboutContent(getLang(Astro.url));
 ---
 
 <section class="experience">

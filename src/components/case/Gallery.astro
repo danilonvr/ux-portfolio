@@ -1,4 +1,7 @@
 ---
+import Icon from "../Icon.astro";
+import { getLang } from "../../i18n";
+import { useTranslations } from "../../i18n/ui";
 /*
  * Gallery — carrossel de fotos com setas (ex.: fotos de pesquisa).
  * Mostra 2 por vez no desktop/tablet e 1 no phone; as setas avançam uma foto.
@@ -12,24 +15,25 @@ interface Props {
 }
 
 const { labels, ratio = "4/3", caption } = Astro.props;
+const t = useTranslations(getLang(Astro.url));
 ---
 
 <figure class="gallery" data-gallery>
-  <div class="viewport" data-gallery-viewport tabindex="0" aria-label="Galeria de fotos (use as setas para navegar)">
+  <div class="viewport" data-gallery-viewport tabindex="0" aria-label={t("gallery.label")}>
     {labels.map((label, i) => (
       <div class="slide" style={`aspect-ratio: ${ratio.replace("/", " / ")}`} role="img" aria-label={label}>
-        <span class="text-small placeholder-label">[Imagem {i + 1} · {label}]</span>
+        <span class="text-small placeholder-label">[{t("media.image")} {i + 1} · {label}]</span>
       </div>
     ))}
   </div>
   <div class="controls">
     <span class="text-small counter" data-gallery-counter aria-live="polite">1 / {labels.length}</span>
     <div class="buttons">
-      <button type="button" class="arrow" aria-label="Foto anterior" data-gallery-prev>
-        <svg viewBox="0 0 256 256" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z" /></svg>
+      <button type="button" class="arrow" aria-label={t("gallery.prev")} data-gallery-prev>
+        <Icon name="arrow-left" size={18} />
       </button>
-      <button type="button" class="arrow" aria-label="Próxima foto" data-gallery-next>
-        <svg viewBox="0 0 256 256" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z" /></svg>
+      <button type="button" class="arrow" aria-label={t("gallery.next")} data-gallery-next>
+        <Icon name="arrow-right" size={18} />
       </button>
     </div>
   </div>

@@ -1,0 +1,255 @@
+---
+/*
+ * LangSwitcher — seletor de idioma: botão com globo + dropdown (English / Português).
+ *
+ * - Cada opção leva à MESMA página no outro idioma (/about ⇄ /pt/about).
+ * - O idioma atual aparece selecionado (mesma pílula da navegação) e com ✓.
+ * - Abre com clique; fecha com Esc, clique fora ou ao escolher. Setas ↑ ↓ navegam entre as opções.
+ * - Cada idioma é escrito na própria língua, com lang/hreflang corretos para leitores de tela.
+ * - Sem JavaScript, o botão não abre, mas a página continua navegável.
+ *
+ * EN: Language switcher — globe button + dropdown linking to the same page in each language.
+ * Spec: DESIGN-SYSTEM.md → Componentes → LangSwitcher
+ */
+import Icon from "./Icon.astro";
+import { getLang, languages, langs, alternatePath } from "../i18n";
+import { useTranslations } from "../i18n/ui";
+
+interface Props {
+  id: string; // único na página (o header usa um no desktop e outro no phone)
+}
+
+const { id } = Astro.props;
+const lang = getLang(Astro.url);
+const t = useTranslations(lang);
+const options = langs.map((l) => ({
+  lang: l,
+  label: languages[l].label,
+  htmlLang: languages[l].htmlLang,
+  href: alternatePath(Astro.url, l),
+  current: l === lang,
+}));
+---
+
+<div class="lang-switcher" data-lang-switcher data-open="false">
+  <button
+    class="lang-button"
+    type="button"
+    aria-expanded="false"
+    aria-controls={id}
+    aria-label={`${t("lang.button")} (${languages[lang].label})`}
+    data-lang-button
+  >
+    <Icon name="globe" size={18} />
+  </button>
+
+  <div class="lang-menu" id={id} data-lang-menu inert>
+    <ul class="lang-list">
+      {options.map((option) => (
+        <li>
+          <a
+            class:list={["lang-option text-nav", { current: option.current }]}
+            href={option.href}
+            hreflang={option.htmlLang}
+            lang={option.htmlLang}
+            aria-current={option.current ? "true" : undefined}
+            data-lang-option
+          >
+            <span>{option.label}</span>
+            {option.current && <Icon name="check" size={14} class="lang-check" />}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .lang-switcher {
+    position: relative;
+  }
+
+  /* Botão: mesmo vidro translúcido da navegação, 36px como o botão "Get in Touch" */
+  .lang-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-round);
+    background: var(--color-glass);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    color: var(--color-text-tertiary);
+    transition:
+      color var(--duration-fast) var(--ease-decelerate),
+      background-color var(--duration-fast) var(--ease-decelerate),
+      box-shadow var(--duration-fast) var(--ease-decelerate);
+  }
+
+  /* Área de toque de 44px, maior que o círculo visível (recomendação para dedo) */
+  .lang-button::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+
+  /* Phone: 34px, mesma altura do avatar (36px deixaria o header 2px mais alto) */
+  @media (max-width: 809.98px) {
+    .lang-button {
+      width: 34px;
+      height: 34px;
+    }
+
+    .lang-button::after {
+      inset: -5px;
+    }
+  }
+
+  .lang-button:hover,
+  .lang-switcher[data-open="true"] .lang-button {
+    color: var(--color-text-primary);
+  }
+
+  /* Aberto: o botão ganha o mesmo visual de "selecionado" da pílula da navegação */
+  .lang-switcher[data-open="true"] .lang-button {
+    background: var(--color-selected-bg);
+    box-shadow: var(--shadow-selected);
+  }
+
+  /* Dropdown */
+  .lang-menu {
+    position: absolute;
+    top: calc(100% + var(--space-8));
+    right: 0;
+    z-index: 20;
+    min-width: 168px;
+    padding: var(--space-4);
+    border-radius: var(--radius-popover);
+    background: var(--color-popover);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    box-shadow: var(--shadow-popover);
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+    transform-origin: top right;
+    visibility: hidden;
+    transition:
+      opacity var(--duration-fast) var(--ease-decelerate),
+      transform var(--duration-fast) var(--ease-decelerate),
+      visibility 0s linear var(--duration-fast);
+  }
+
+  .lang-switcher[data-open="true"] .lang-menu {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+    transition:
+      opacity var(--duration-fast) var(--ease-decelerate),
+      transform var(--duration-fast) var(--ease-decelerate),
+      visibility 0s;
+  }
+
+  .lang-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .lang-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-12);
+    min-height: 36px;
+    padding: var(--space-8) var(--space-12);
+    border-radius: var(--radius-pill);
+    color: var(--color-text-tertiary);
+    transition:
+      color var(--duration-fast) var(--ease-decelerate),
+      background-color var(--duration-fast) var(--ease-decelerate);
+  }
+
+  .lang-option:hover,
+  .lang-option:focus-visible {
+    color: var(--color-text-primary);
+    background: var(--color-surface);
+  }
+
+  /* Idioma atual: mesma pílula do item selecionado da navegação */
+  .lang-option.current {
+    color: var(--color-text-primary);
+    background: var(--color-selected-bg);
+    box-shadow: var(--shadow-selected);
+  }
+
+  .lang-option :global(.lang-check) {
+    flex-shrink: 0;
+    color: var(--color-text-primary);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-lang-switcher]").forEach((root) => {
+    const button = root.querySelector<HTMLButtonElement>("[data-lang-button]");
+    const menu = root.querySelector<HTMLElement>("[data-lang-menu]");
+    const options = Array.from(root.querySelectorAll<HTMLAnchorElement>("[data-lang-option]"));
+    if (!button || !menu) return;
+
+    const isOpen = () => root.dataset.open === "true";
+
+    function setOpen(open: boolean, focusFirst = false) {
+      root.dataset.open = String(open);
+      button!.setAttribute("aria-expanded", String(open));
+      menu!.inert = !open;
+      if (open && focusFirst) (options.find((o) => o.classList.contains("current")) ?? options[0])?.focus();
+    }
+
+    button.addEventListener("click", () => setOpen(!isOpen()));
+
+    // Teclado: ↓ abre e entra na lista; ↑ ↓ circulam; Esc fecha e devolve o foco ao botão
+    button.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        setOpen(true, true);
+      }
+    });
+
+    menu.addEventListener("keydown", (event) => {
+      const index = options.indexOf(document.activeElement as HTMLAnchorElement);
+      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        event.preventDefault();
+        const step = event.key === "ArrowDown" ? 1 : -1;
+        options[(index + step + options.length) % options.length]?.focus();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && isOpen()) {
+        setOpen(false);
+        button.focus();
+      }
+    });
+
+    // Clique fora ou foco saindo do componente fecham o dropdown
+    document.addEventListener("click", (event) => {
+      if (isOpen() && !root.contains(event.target as Node)) setOpen(false);
+    });
+
+    root.addEventListener("focusout", (event) => {
+      if (isOpen() && !root.contains(event.relatedTarget as Node)) setOpen(false);
+    });
+
+    // Ao escolher o idioma atual, só fecha
+    options.forEach((option) => {
+      option.addEventListener("click", (event) => {
+        if (option.classList.contains("current")) {
+          event.preventDefault();
+          setOpen(false);
+          button.focus();
+        }
+      });
+    });
+  });
+</script>

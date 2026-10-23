@@ -13,12 +13,16 @@ interface Props {
   kind?: "image" | "video";
 }
 
+import { getLang } from "../../i18n";
+import { useTranslations } from "../../i18n/ui";
+
 const { ratio = "16/9", label, caption, kind = "image" } = Astro.props;
+const t = useTranslations(getLang(Astro.url));
 ---
 
 <figure class="media">
   <div class="frame" style={`aspect-ratio: ${ratio.replace("/", " / ")}`} role="img" aria-label={label}>
-    <span class="text-small placeholder-label">[{kind === "video" ? "Vídeo" : "Imagem"} · {label}]</span>
+    <span class="text-small placeholder-label">[{kind === "video" ? t("media.video") : t("media.image")} · {label}]</span>
   </div>
   {caption && <figcaption class="text-small caption">{caption}</figcaption>}
 </figure>

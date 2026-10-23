@@ -11,13 +11,18 @@
  */
 import Button from "./Button.astro";
 import ArrowLink from "./ArrowLink.astro";
-import { links, footerColumns, footerCta, clock } from "../data/site";
+import { links, getSiteContent, clock } from "../data/site";
+import { getLang, languages, localizePath, stripLang } from "../i18n";
+import { useTranslations } from "../i18n/ui";
 
+const lang = getLang(Astro.url);
+const t = useTranslations(lang);
+const { footerColumns, footerCta } = getSiteContent(lang);
 const columns = [footerColumns.index, footerColumns.projects, footerColumns.contact];
 
 // Link da página atual fica em --color-text-primary (mais escuro), igual ao Framer.
 // "/" fica de fora: no Framer, "DF no Ponto" (que aponta para a Home) não é marcado na Home.
-const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const path = stripLang(Astro.url.pathname).replace(/\/$/, "") || "/";
 const isCurrent = (href: string) => href !== "/" && href === path;
 ---
 
@@ -31,8 +36,8 @@ const isCurrent = (href: string) => href !== "/" && href === path;
             <p class="text-heading-cta">{footerCta.title}</p>
           </div>
           <div class="cta-actions">
-            <Button href={links.resume} external>Resume</Button>
-            <ArrowLink href={links.linkedin} external>Contact Me</ArrowLink>
+            <Button href={links.resume} external>{t("footer.resume")}</Button>
+            <ArrowLink href={links.linkedin} external>{t("footer.contact")}</ArrowLink>
           </div>
         </div>
 
@@ -47,7 +52,7 @@ const isCurrent = (href: string) => href !== "/" && href === path;
                     class="clock"
                     data-clock
                     data-timezone={clock.timeZone}
-                    data-locale={clock.locale}
+                    data-locale={languages[lang].locale}
                   ></time>
                 </div>
               ) : (
@@ -58,7 +63,7 @@ const isCurrent = (href: string) => href !== "/" && href === path;
                   <li>
                     <a
                       class:list={["text-heading-md footer-link", { current: isCurrent(item.href) }]}
-                      href={item.href}
+                      href={localizePath(item.href, lang)}
                       aria-current={isCurrent(item.href) ? "page" : undefined}
                       target={"external" in item && item.external ? "_blank" : undefined}
                       rel={"external" in item && item.external ? "noopener noreferrer" : undefined}

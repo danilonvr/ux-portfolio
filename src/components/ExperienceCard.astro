@@ -8,6 +8,8 @@
  * Spec: DESIGN-SYSTEM.md → Componentes → ExperienceCard
  */
 import Icon from "./Icon.astro";
+import { getLang } from "../i18n";
+import { useTranslations } from "../i18n/ui";
 
 interface Props {
   role: string;
@@ -17,6 +19,7 @@ interface Props {
 }
 
 const { role, company, period, description } = Astro.props;
+const t = useTranslations(getLang(Astro.url));
 ---
 
 <article class="experience-card with-border">
@@ -24,13 +27,13 @@ const { role, company, period, description } = Astro.props;
     <h3 class="text-heading-item role">{role}</h3>
     <div class="details">
       <p class="detail text-small">
-        <Icon name="buildings" size={16} />
-        <span class="visually-hidden">Company:</span>
+        <Icon name="buildings" weight="light" size={16} />
+        <span class="visually-hidden">{t("experience.company")}</span>
         <span>{company}</span>
       </p>
       <p class="detail text-small">
-        <Icon name="calendar" size={16} />
-        <span class="visually-hidden">Period:</span>
+        <Icon name="calendar" weight="light" size={16} />
+        <span class="visually-hidden">{t("experience.period")}</span>
         <span>{period}</span>
       </p>
     </div>

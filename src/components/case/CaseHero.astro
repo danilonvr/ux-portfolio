@@ -5,6 +5,8 @@
  * Os dados vêm do cabeçalho (frontmatter) do arquivo .mdx do case.
  */
 import Placeholder from "../Placeholder.astro";
+import { getLang } from "../../i18n";
+import { useTranslations } from "../../i18n/ui";
 
 interface Props {
   title: string;
@@ -17,12 +19,13 @@ interface Props {
   cover?: string;
 }
 
-const { title, subtitle, category, company, role, duration, year, cover = "Capa do case" } = Astro.props;
+const t = useTranslations(getLang(Astro.url));
+const { title, subtitle, category, company, role, duration, year, cover = t("case.coverFallback") } = Astro.props;
 const facts = [
-  { label: "Company", value: company },
-  { label: "Role", value: role },
-  { label: "Duration", value: duration },
-  { label: "Year", value: year },
+  { label: t("case.company"), value: company },
+  { label: t("case.role"), value: role },
+  { label: t("case.duration"), value: duration },
+  { label: t("case.year"), value: year },
 ];
 ---
 

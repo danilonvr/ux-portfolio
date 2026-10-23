@@ -1,29 +1,42 @@
 ---
 /*
- * Icon — ícones do Phosphor (estilo "regular"), os mesmos usados no Framer.
- * Herdam a cor do texto (currentColor). Tamanho via prop `size` (px).
- * Para adicionar um ícone: copie o path em https://phosphoricons.com (regular, viewBox 256).
+ * Icon — ícones do Phosphor (https://phosphoricons.com), lidos direto do pacote oficial
+ * @phosphor-icons/core. Regra do projeto: TODOS os ícones do site vêm daqui.
+ *
+ * Uso: <Icon name="globe" />  ·  <Icon name="buildings" weight="light" size={16} />
+ *   name   = nome do ícone no site do Phosphor (ex.: "arrow-up-right", "linkedin-logo")
+ *   weight = estilo: thin | light | regular (padrão) | bold | fill | duotone
+ *   size   = tamanho em px (padrão 14)
+ *   label  = preencha só quando o ícone for o único conteúdo de um link/botão
+ *
+ * O ícone herda a cor do texto (currentColor). Nome errado = erro no build, de propósito.
+ *
+ * EN: Phosphor icons read from the official package. Every icon on the site comes from here.
  */
 interface Props {
-  name: "arrow-up-right" | "linkedin" | "x" | "buildings" | "calendar";
+  name: string;
+  weight?: "thin" | "light" | "regular" | "bold" | "fill" | "duotone";
   size?: number;
-  label?: string; // preencha só quando o ícone for o único conteúdo de um link/botão
+  label?: string;
+  class?: string;
 }
 
-const { name, size = 14, label } = Astro.props;
+const { name, weight = "regular", size = 14, label, class: className } = Astro.props;
 
-const paths: Record<Props["name"], string> = {
-  "arrow-up-right":
-    "M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z",
-  linkedin:
-    "M216,24H40A16,16,0,0,0,24,40V216a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V40A16,16,0,0,0,216,24Zm0,192H40V40H216V216ZM96,112v64a8,8,0,0,1-16,0V112a8,8,0,0,1,16,0Zm88,28v36a8,8,0,0,1-16,0V140a20,20,0,0,0-40,0v36a8,8,0,0,1-16,0V112a8,8,0,0,1,15.79-1.78A36,36,0,0,1,184,140ZM100,84A12,12,0,1,1,88,72,12,12,0,0,1,100,84Z",
-  // buildings e calendar usam o estilo "light" do Phosphor (traço mais fino), igual ao Framer
-  buildings:
-    "M240,210H222V96a14,14,0,0,0-14-14H142V32a14,14,0,0,0-21.77-11.64l-80,53.33A14,14,0,0,0,34,85.34V210H16a6,6,0,0,0,0,12H240a6,6,0,0,0,0-12ZM208,94a2,2,0,0,1,2,2V210H142V94ZM46,85.34a2,2,0,0,1,.89-1.66l80-53.34A2,2,0,0,1,130,32V210H46ZM110,112v16a6,6,0,0,1-12,0V112a6,6,0,0,1,12,0Zm-32,0v16a6,6,0,0,1-12,0V112a6,6,0,0,1,12,0Zm0,56v16a6,6,0,0,1-12,0V168a6,6,0,0,1,12,0Zm32,0v16a6,6,0,0,1-12,0V168a6,6,0,0,1,12,0Z",
-  calendar:
-    "M208,34H182V24a6,6,0,0,0-12,0V34H86V24a6,6,0,0,0-12,0V34H48A14,14,0,0,0,34,48V208a14,14,0,0,0,14,14H208a14,14,0,0,0,14-14V48A14,14,0,0,0,208,34ZM48,46H74V56a6,6,0,0,0,12,0V46h84V56a6,6,0,0,0,12,0V46h26a2,2,0,0,1,2,2V82H46V48A2,2,0,0,1,48,46ZM208,210H48a2,2,0,0,1-2-2V94H210V208A2,2,0,0,1,208,210Zm-98-90v64a6,6,0,0,1-12,0V129.71l-7.32,3.66a6,6,0,1,1-5.36-10.74l16-8A6,6,0,0,1,110,120Zm59.57,29.25L148,178h20a6,6,0,0,1,0,12H136a6,6,0,0,1-4.8-9.6L160,142a10,10,0,1,0-16.65-11A6,6,0,1,1,133,125a22,22,0,1,1,36.62,24.26Z",
-  x: "M214.75,211.71l-62.6-98.38,61.77-67.95a8,8,0,0,0-11.84-10.76L143.24,99.34,102.75,35.71A8,8,0,0,0,96,32H48a8,8,0,0,0-6.75,12.3l62.6,98.37-61.77,68a8,8,0,1,0,11.84,10.76l58.84-64.72,40.49,63.63A8,8,0,0,0,160,224h48a8,8,0,0,0,6.75-12.29ZM164.39,208,62.57,48h29L193.43,208Z",
-};
+// Todos os SVGs do pacote, carregados sob demanda (só o ícone usado entra no build)
+const icons = import.meta.glob<string>("/node_modules/@phosphor-icons/core/assets/*/*.svg", {
+  query: "?raw",
+  import: "default",
+});
+
+const file = weight === "regular" ? `${name}.svg` : `${name}-${weight}.svg`;
+const key = `/node_modules/@phosphor-icons/core/assets/${weight}/${file}`;
+const load = icons[key];
+if (!load) throw new Error(`Ícone Phosphor não encontrado: "${name}" (${weight})`);
+
+// Mantém só o conteúdo de dentro do <svg> do pacote; o <svg> externo é montado aqui
+const raw = await load();
+const inner = raw.replace(/^[\s\S]*?<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "");
 ---
 
 <svg
@@ -32,10 +45,10 @@ const paths: Record<Props["name"], string> = {
   width={size}
   height={size}
   fill="currentColor"
+  class={className}
   aria-hidden={label ? undefined : "true"}
   aria-label={label}
   role={label ? "img" : undefined}
   focusable="false"
->
-  <path d={paths[name]} />
-</svg>
+  set:html={inner}
+/>

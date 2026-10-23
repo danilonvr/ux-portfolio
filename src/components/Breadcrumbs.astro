@@ -1,4 +1,6 @@
 ---
+import { getLang } from "../i18n";
+import { useTranslations } from "../i18n/ui";
 /*
  * Breadcrumbs — trilha de navegação ("Home / About").
  * Links em --color-text-secondary (hover: destaque + sublinhado); página atual em --color-text-tertiary.
@@ -10,9 +12,10 @@ interface Props {
 }
 
 const { items } = Astro.props;
+const t = useTranslations(getLang(Astro.url));
 ---
 
-<nav class="breadcrumbs text-body" aria-label="Breadcrumb">
+<nav class="breadcrumbs text-body" aria-label={t("breadcrumb.label")}>
   <ol>
     {items.map((item, i) => (
       <li>

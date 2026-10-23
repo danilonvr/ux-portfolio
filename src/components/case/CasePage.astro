@@ -1,0 +1,149 @@
+---
+/*
+ * CasePage — página de case (Direção B): abertura + sumário lateral + conteúdo do .mdx.
+ * Usada pelas rotas /project/<slug> (inglês) e /pt/project/<slug> (português).
+ * Sem entry = case ainda não migrado: mostra o esboço temporário.
+ */
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageStub from "../PageStub.astro";
+import CaseHero from "./CaseHero.astro";
+import CaseToc from "./CaseToc.astro";
+
+interface Props {
+  entry?: CollectionEntry<"cases">;
+  slug: string;
+}
+
+const { entry, slug } = Astro.props;
+const rendered = entry ? await render(entry) : undefined;
+// Sumário: cada "##" é uma seção; os "###" logo abaixo dela viram seus subitens
+type TocItem = { slug: string; text: string; children: { slug: string; text: string }[] };
+const sections: TocItem[] = [];
+for (const heading of rendered?.headings ?? []) {
+  if (heading.depth === 2) sections.push({ slug: heading.slug, text: heading.text, children: [] });
+  else if (heading.depth === 3 && sections.length > 0) {
+    sections[sections.length - 1].children.push({ slug: heading.slug, text: heading.text });
+  }
+}
+---
+
+{entry && rendered ? (
+  <BaseLayout title={`${entry.data.title} — Danilo Valois`} description={entry.data.subtitle}>
+    <CaseHero {...entry.data} />
+
+    <section class="case-body">
+      <div class="case-layout container">
+        <CaseToc items={sections} />
+        <article class="case-content">
+          <rendered.Content />
+        </article>
+      </div>
+    </section>
+  </BaseLayout>
+) : (
+  <BaseLayout>
+    <PageStub name={`Case: ${slug}`} />
+  </BaseLayout>
+)}
+
+<style>
+  .case-body {
+    padding: var(--section-pad-y) var(--page-gutter);
+  }
+
+  .case-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-100);
+  }
+
+  .case-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  @media (max-width: 1199.98px) {
+    .case-layout {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-40);
+    }
+  }
+
+  /* ---------- Estilo do texto vindo do .mdx ---------- */
+  .case-content > :global(:first-child),
+  .case-content > :global(:first-child) :global(h2) {
+    margin-top: 0;
+  }
+
+  .case-content :global(h2) {
+    margin: var(--space-80) 0 var(--space-16);
+    font-family: var(--font-serif);
+    font-size: var(--text-heading-lg-size);
+    font-weight: var(--weight-medium);
+    line-height: 1.2;
+    color: var(--color-text-primary);
+    /* Para o título não ficar atrás do header fixo ao chegar pela âncora */
+    scroll-margin-top: calc(var(--header-height) + var(--space-24));
+  }
+
+  /* Abaixo de 1200px a barra do sumário também fica fixa: desconta a altura dela */
+  @media (max-width: 1199.98px) {
+    .case-content :global(h2),
+    .case-content :global(h3) {
+      scroll-margin-top: calc(var(--header-height) + 48px + var(--space-24));
+    }
+  }
+
+  .case-content :global(h2:focus) {
+    outline: none;
+  }
+
+  .case-content :global(h3) {
+    margin: var(--space-40) 0 var(--space-12);
+    scroll-margin-top: calc(var(--header-height) + var(--space-24));
+    font-family: var(--font-serif);
+    font-size: var(--text-heading-item-size);
+    font-weight: var(--weight-medium);
+    line-height: 1.2;
+    color: var(--color-text-primary);
+  }
+
+  .case-content :global(p) {
+    margin: 0 0 var(--space-16);
+    color: var(--color-text-secondary);
+  }
+
+  .case-content :global(strong) {
+    color: var(--color-text-primary);
+    font-weight: var(--weight-medium);
+  }
+
+  /* Lista numerada do markdown (1. 2. 3.) vira lista com divisórias */
+  .case-content :global(ol) {
+    margin: var(--space-16) 0 var(--space-24);
+    padding: 0;
+    list-style: none;
+    counter-reset: item;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .case-content :global(ol > li) {
+    display: flex;
+    gap: var(--space-20);
+    padding: var(--space-16) 0;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    counter-increment: item;
+  }
+
+  .case-content :global(ol > li)::before {
+    content: counter(item, decimal-leading-zero);
+    flex-shrink: 0;
+    width: 24px;
+    font-family: var(--font-serif);
+    color: var(--color-text-tertiary);
+  }
+</style>

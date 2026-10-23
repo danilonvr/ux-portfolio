@@ -10,13 +10,17 @@
  */
 import Breadcrumbs from "../Breadcrumbs.astro";
 import Placeholder from "../Placeholder.astro";
-import { intro } from "../../data/about";
+import { getAboutContent } from "../../data/about";
+import { getLang, localizePath } from "../../i18n";
+
+const lang = getLang(Astro.url);
+const { intro } = getAboutContent(lang);
 ---
 
 <section class="about-intro">
   <div class="inner container">
     <div class="heading">
-      <Breadcrumbs items={[{ label: intro.breadcrumb.home, href: "/" }, { label: intro.breadcrumb.current }]} />
+      <Breadcrumbs items={[{ label: intro.breadcrumb.home, href: localizePath("/", lang) }, { label: intro.breadcrumb.current }]} />
       <h1 class="text-heading-cta title">{intro.title}</h1>
     </div>
 

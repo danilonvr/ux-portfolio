@@ -1,4 +1,7 @@
 ---
+import Icon from "../Icon.astro";
+import { getLang } from "../../i18n";
+import { useTranslations } from "../../i18n/ui";
 /*
  * CaseToc — sumário do case ("On this page") com scroll-spy.
  *
@@ -18,7 +21,8 @@ interface Props {
   label?: string;
 }
 
-const { items, label = "On this page" } = Astro.props;
+const t = useTranslations(getLang(Astro.url));
+const { items, label = t("toc.label") } = Astro.props;
 
 // Índice único para cada título, na ordem em que aparecem na página
 let counter = 0;
@@ -75,13 +79,11 @@ const tree = items.map((item) => {
 </nav>
 
 <!-- Tablet e phone: barra compacta (só seções) -->
-<nav class="toc-bar" aria-label={`${label} (compacto)`} data-toc-bar>
+<nav class="toc-bar" aria-label={t("toc.compact")} data-toc-bar>
   <button class="toc-bar-button" type="button" aria-expanded="false" aria-controls="toc-bar-panel">
     <span class="text-small toc-bar-label">{label}</span>
     <span class="text-body toc-bar-current" data-toc-current>{items[0]?.text}</span>
-    <svg class="toc-bar-chevron" viewBox="0 0 256 256" width="16" height="16" aria-hidden="true" fill="currentColor">
-      <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z" />
-    </svg>
+    <Icon name="caret-down" size={16} class="toc-bar-chevron" />
   </button>
   <div class="toc-bar-panel" id="toc-bar-panel" hidden>
     <ol class="toc-bar-list">
